@@ -1,0 +1,5 @@
+=== boot form linux usb drive ===
+Hold down *option* key while system boots
+----
+ - https://wiki.gentoo.org/wiki/Apple_Macbook_Pro_Retina_(early_2013)
+ - https://www.lifewire.com/dual-boot-linux-and-mac-os-4125733
