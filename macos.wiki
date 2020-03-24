@@ -3,3 +3,13 @@ Hold down *option* key while system boots
 ----
  - https://wiki.gentoo.org/wiki/Apple_Macbook_Pro_Retina_(early_2013)
  - https://www.lifewire.com/dual-boot-linux-and-mac-os-4125733
+
+=== timewarrior: install and integrate with taskwarrior ===
+{{{sh
+brew install timewarrior
+mkdir -p ~/.task/hooks/
+cp /usr/local/Cellar/timewarrior/1.2.0/share/doc/timew/ext/on-modify.timewarrior ~/.task/hooks/
+chmod +x ~/.task/hooks/on-modify.timewarrior
+}}}
+----
+ - https://timewarrior.net/docs/taskwarrior.html
