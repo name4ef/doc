@@ -13,3 +13,41 @@ chmod +x ~/.task/hooks/on-modify.timewarrior
 }}}
 ----
  - https://timewarrior.net/docs/taskwarrior.html
+
+=== vim + taskwiki ===
+{{{sh
+brew install vim
+export PATH=$PATH:/usr/local/bin/ # add to .~/.zshrc
+}}}
+
+=== show routes ===
+{{{sh
+netstat -rlnf inet
+}}}
+
+=== forwarding traffic between interfaces ===
+/etc/pf.conf:
+{{{pf
+int_if = "vboxnet0"
+ext_if = "en0"
+lan_net = "192.168.56.0/24"
+ext_addr = "192.168.8.100"
+
+#
+# com.apple anchor point
+#
+scrub-anchor "com.apple/*"
+nat on $ext_if from $lan_net to any -> $ext_addr
+#nat on $ext_if from $int_if:network to any -> ($ext_if)
+#pass out on $ext_if from $lan_net to any nat-to $ext_addr
+nat-anchor "com.apple/*"
+rdr-anchor "com.apple/*"
+dummynet-anchor "com.apple/*"
+anchor "com.apple/*"
+load anchor "com.apple" from "/etc/pf.anchors/com.apple"
+}}}
+
+{{{sh
+sysctl net.inet.ip.forwarding=1
+pfctl -f /etc/pf.conf -e
+}}}
