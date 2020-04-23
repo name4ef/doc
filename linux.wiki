@@ -3,3 +3,36 @@
 vim /etc/X11/Xwrapper.config
     allowed_users=anybody
 }}}
+
+=== nvidia optimus ===
+==== solution for work nvidia only ====
+ 1. install nvidia driver
+ 2. get PCI address of nvidia card: `lspci|grep -E "VGA|3D"` (01:00.0 is 1:0:0)
+ 3. add to /etc/X11/xorg.conf:
+{{{conf
+Section "Module"
+    Load "modesetting"
+EndSection
+
+Section "Device"
+    Identifier "nvidia"
+    Driver "nvidia"
+    BusID "<pci address here>"
+    Option "AllowEmptyInitialConfiguration"
+EndSection
+}}}
+ 4. add to ~/.xinitrc:
+{{{sh
+xrandr --setprovideroutputsource modesetting NVIDIA-0
+xrandr --auto
+}}}
+===== for kdm =====
+add to /etc/kde/kdm/Xsetup:
+{{{sh
+xrandr --setprovideroutputsource modesetting NVIDIA-0
+xrandr --auto
+xrandr --dpi 96
+}}}
+and `killall kdm` to /etc/kde/kdm/Xreset:
+----
+ - https://wiki.archlinux.org/index.php/NVIDIA_Optimus_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)
