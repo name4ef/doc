@@ -51,3 +51,22 @@ load anchor "com.apple" from "/etc/pf.anchors/com.apple"
 sysctl net.inet.ip.forwarding=1
 pfctl -f /etc/pf.conf -e
 }}}
+
+=== format usb flash to ext3 ===
+{{{sh
+brew install e2fsprogs
+diskutil list # get partition name (disk2s1)
+diskutil umountDisk disk2
+sudo $(brew --prefix e2fsprogs)/sbin/mkfs.ext3 /dev/disk2s1
+}}}
+----
+ - https://apple.stackexchange.com/questions/171506/formatting-usb-disk-as-ext3-on-mac
+
+=== mount ext3 (ro) ===
+{{{sh
+brew cask install osxfuse
+brew install ext4fuse 
+sudo ext4fuse /dev/disk2s1 mnt -o allow_other
+}}}
+----
+ - https://hackmylinux.com/2018/02/18/how-to-mount-and-read-a-linux-partition-on-a-mac-ext2-ext3-ext4/
