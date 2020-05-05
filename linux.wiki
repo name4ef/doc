@@ -1,9 +1,3 @@
-=== only console users are allowed to run the X server (fix it) ===
-{{{sh
-vim /etc/X11/Xwrapper.config
-    allowed_users=anybody
-}}}
-
 === nvidia optimus ===
 ==== solution for work nvidia only ====
  1. install nvidia driver
