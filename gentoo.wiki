@@ -1,0 +1,97 @@
+=== install to sambook ===
+ 1. download: https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-install-amd64-minimal/install-amd64-minimal-<somedate>.iso
+ 2. write to usb flash 
+ 3. boot from livecd
+ 4. create swap and root partitions over cfdisk (dos)
+ 5. mkfs.ext4 /dev/sda2; mkswap /dev/sda1; swapon /dev/sda1
+ 6. mount /dev/sda2 /mnt/gentoo
+ 7. up network:
+{{{sh
+ip link set dev wlp1s0 up
+wpa_passphrase <SSID> >> /etc/wpa_supplicant.conf
+wpa_supplicant -B -D wext -i wlp1s0 -c /etc/wpa_supplicant.conf
+dhcpcd wlp1s0
+}}}
+ 8. ntpd -q -g
+ 9. cd /mnt/gentoo
+ 10. links https://www.gentoo.org/downloads/mirrors/ and select mirror
+ 11. go to the releases/amd64/autobuilds/ directory
+ 12. downloads: https://mirror.ps.kz/gentoo/pub/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-20200422T214502Z.tar.xz
+ 13. openssl dgst -r -sha512 stage3-amd64-<release>.tar.?(bz2|xz) and compare with content of .DIGESTS(.asc) file
+ 14. tar xpvf stage3-*.tar.bz2 --xattrs-include='*.*' --numeric-owner
+ 15. vi etc/portage/make.conf (add MAKEOPTS="-j4")
+ 16. mirrorselect -i -o >> etc/portage/make.conf (GENTOO_MIRRORS="http://mirror.ps.kz/gentoo/pub/")
+ 17. mkdir etc/portage/repos.conf
+ 18. cp usr/share/portage/config/repos.conf etc/portage/repos.conf/gentoo.conf
+ 19. cp -L /etc/resolv.conf etc/
+ 20. mount -t proc /proc proc/
+ 21. mount -R /sys sys/
+ 22. mount -R /dev dev/
+ 23. chroot . /bin/bash
+ 24. source /etc/profile
+ 25. export PS1="(chroot) ${PS1}"
+ 26. emerge-webrsync
+ 27. emerge --ask --verbose --update --deep --newuse @world
+ 28. echo "Asia/Tomsk" > /etc/timezone
+ 29. emerge --config sys-libs/timezone-data
+ 30. emerge --ask vim
+ 31. vim /etc/locale.gen (uncomment: en_US.UTF-8 UTF-8)
+ 32. locale-gen
+ 33. eselect locale list
+ 34. eselect locale set 4
+ 35. env-update && source /etc/profile && export PS1="(chroot) ${PS1}"
+ 36. emerge --ask sys-kernel/gentoo-sources
+ 37. emerge --ask sys-kernel/genkernel
+ 38. genkernel all; ls /boot/kernel* /boot/initramfs*
+ 39. emerge --ask sys-kernel/linux-firmware
+ 40. vim /etc/fstab
+ 41. passwd
+ 42. emerge --ask app-admin/sysklogd
+ 43. rc-update add sysklogd default
+ 44. rc-update add sshd default
+ 45. emerge --ask sys-fs/e2fsprogs
+ 46. emerge --ask net-misc/dhcpcd
+ 47. emerge --ask sys-boot/lilo
+ 48. emerge --ask tmux
+ 49. vim /etc/lilo.conf; lilo
+ 50. exit
+ 51. cd
+ 52. umount -l /mnt/gentoo/dev{/shm,/pts,}
+ 53. umount -R /mnt/gentoo
+ 54. reboot
+----
+ - https://www.gentoo.org/get-started/
+ - https://wiki.gentoo.org/wiki/Handbook:AMD64
+
+=== distcc for emerge ===
+ 1. ssh root@calculate
+     1. emerge --ask sys-devel/distcc
+     2. vim /etc/conf.d/distccd
+         {{{sh
+         # add some like this:
+         DISTCCD_OPTS="--port 3632 -N 15
+         --log-level notice --log-file /var/log/distccd.log
+         --allow 192.168.0.4 --allow 192.168.0.5"
+         }}}
+     3. rc-update add distccd default
+     4. rc-service distccd start
+ 2. distcc-config --set-hosts "localhost,cpp,lzo calculate,cpp,lzo"
+ 3. vim /etc/portage/make.conf
+     {{{conf
+     # 1 remote hosts with 6 cores each = 6 cores remote
+     # 1 local host with 8 cores = 8 cores local
+     # total number of cores is 14, so N = 2*14+1 and M=8
+     MAKEOPTS="-j29 -l8"
+     FEATURES="distcc"
+     }}}
+----
+ - https://wiki.gentoo.org/wiki/Distcc
+
+=== can't ping under regular user (ping: socket: Operation not permitted) ===
+{{{sh
+emerge -C net-misc/iputils
+emerge net-misc/iputils
+}}}
+
+=== write iso image of Windows to usb flash ===
+`woeusb --device Win10_1909_Russian_x64.iso /dev/sdc`
