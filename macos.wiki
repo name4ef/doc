@@ -70,3 +70,10 @@ sudo ext4fuse /dev/disk2s1 mnt -o allow_other
 }}}
 ----
  - https://hackmylinux.com/2018/02/18/how-to-mount-and-read-a-linux-partition-on-a-mac-ext2-ext3-ext4/
+
+=== write iso image to usb flash ===
+{{{sh
+diskutil list # get partition name (disk2)
+diskutil umountDisk disk2
+dd bs=4k if=<PATH TO ISO> of=/dev/disk2
+}}}
