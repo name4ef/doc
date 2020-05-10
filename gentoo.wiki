@@ -41,8 +41,8 @@ dhcpcd wlp1s0
  34. eselect locale set 4
  35. env-update && source /etc/profile && export PS1="(chroot) ${PS1}"
  36. emerge --ask sys-kernel/gentoo-sources
- 37. emerge --ask sys-kernel/genkernel
- 38. genkernel all; ls /boot/kernel* /boot/initramfs*
+ 37. emerge --ask sys-kernel/genkernel (etc-update for apply license)
+ 38. genkernel all; ls /boot/vmlinuz* /boot/initramfs*
  39. emerge --ask sys-kernel/linux-firmware
  40. vim /etc/fstab
  41. passwd
@@ -53,7 +53,7 @@ dhcpcd wlp1s0
  46. emerge --ask net-misc/dhcpcd
  47. emerge --ask sys-boot/lilo
  48. emerge --ask tmux
- 49. vim /etc/lilo.conf; lilo
+ 49. liloconfig; vim /etc/lilo.conf; lilo
  50. exit
  51. cd
  52. umount -l /mnt/gentoo/dev{/shm,/pts,}
