@@ -8,3 +8,15 @@
      - boost clock: 1050
      - max gflops: 403.2
  - model: MacBookAir8,2 A1932 (https://en.wikipedia.org/wiki/MacBook_Air)
+
+=== boot from linux usb drive ===
+reboot: hold down *Command+R*
+enter to macOS Utilities
+select menu Utilities --> Startup Security Utility
+    Security Boot: No Security
+    Allowed Boot Media: Allow booting from eternal or removable media
+reboot: Hold down *option*
+select linux usb
+----
+ - https://wiki.gentoo.org/wiki/Apple_Macbook_Pro_Retina_(early_2013)
+ - https://www.lifewire.com/dual-boot-linux-and-mac-os-4125733
