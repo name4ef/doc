@@ -78,10 +78,12 @@ dd bs=4k if=<PATH TO ISO> of=/dev/disk2
 # active developer directory '/Library/Developer/CommandLineTools' is a command
 # line tools instance" run this:
 # sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-cd ~/dev/tir/TextXCode7/projects/osx # Go to project dirrectory
-xcodebuild -list -project Test.xcodeproj # List all information about project
-xcodebuild -scheme "Test Debug" build # Building "Test Debug" scheme
+cd ~/dev/tir/TextXCode7/projects/osx; # Go to project dirrectory
+xcodebuild -list -project Test.xcodeproj; # List all information about project
+xcodebuild -scheme "Test Debug" build; # Building "Test Debug" scheme
 ~/Library/Developer/Xcode/DerivedData/Test-fhwmxqkzecgaspckjkghrxesoood/Build/Products/Debug/Test.app/Contents/MacOS/Test
+xcodebuild -scheme "Test Debug" SYMROOT=../../build; # Debug build: ../../build/Debug/Test.app
+xcodebuild -scheme "Test Release" DSTROOT=../../build archive; # Release build: ../../build/Applications/Test.app
 }}}
 ----
  - https://developer.apple.com/library/archive/technotes/tn2339/_index.html#//apple_ref/doc/uid/DTS40014588-CH1-HOW_DO_I_BUILD_MY_PROJECTS_FROM_THE_COMMAND_LINE_
