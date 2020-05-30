@@ -85,6 +85,13 @@ xcodebuild -scheme "Test Debug" build; # Building "Test Debug" scheme
 xcodebuild -scheme "Test Debug" SYMROOT=../../build; # Debug build: ../../build/Debug/Test.app
 xcodebuild -scheme "Test Release" DSTROOT=../../build archive; # Release build: ../../build/Applications/Test.app
 }}}
+{{{make
+all:
+	xcodebuild -project projects/osx/Test.xcodeproj -scheme "Test Debug" SYMROOT=../../build
+
+run:
+	./build/Debug/Test.app/Contents/MacOS/Test
+}}}
 ----
  - https://developer.apple.com/library/archive/technotes/tn2339/_index.html#//apple_ref/doc/uid/DTS40014588-CH1-HOW_DO_I_BUILD_MY_PROJECTS_FROM_THE_COMMAND_LINE_
  - https://stackoverflow.com/questions/17980759/xcode-select-active-developer-directory-error
