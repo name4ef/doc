@@ -98,3 +98,6 @@ run:
 
 === Display notification from the Mac command line ===
 https://code-maven.com/display-notification-from-the-mac-command-line
+
+=== something like netstat ===
+`lsof -nP -iTCP | grep LISTEN`
