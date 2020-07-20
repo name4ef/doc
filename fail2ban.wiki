@@ -6,3 +6,5 @@ vim /etc/fail2ban/jail.d/sshd.conf
 /etc/init.d/fail2ban restart
 fail2ban-client status
 }}}
+----
+- https://wiki.gentoo.org/wiki/Fail2ban#Configuration
