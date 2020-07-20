@@ -113,3 +113,12 @@ emerge net-misc/iputils
 === set hostname ===
 vim /etc/conf.d/hostname
 vim /etc/hosts
+
+=== usage only needed network interface (ex. wired only) ===
+{{{sh
+vim /etc/conf.d/net
+    config_enp2s0="dhcp"
+cd /etc/init.d
+ln -s net.lo net.enp2s0
+rc-update add net.enp2s0 default
+}}}
