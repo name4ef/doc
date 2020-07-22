@@ -30,3 +30,16 @@ xrandr --dpi 96
 and `killall kdm` to /etc/kde/kdm/Xreset:
 ----
  - https://wiki.archlinux.org/index.php/NVIDIA_Optimus_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)
+
+=== write dirrectory to DVD ===
+{{{sh
+emerge --ask app-cdr/cdrtools # for gentoo
+mkisofs -o some.iso some/
+cdrecord dev=/dev/cdrom some.iso
+# For check:
+dd if=/dev/cdrom of=/tmp/cdimg1.iso
+md5sum /tmp/cdimg1.iso some.iso
+rm /tmp/cdimg1.iso
+}}}
+----
+- https://wiki.gentoo.org/wiki/CD/DVD/BD_writing
