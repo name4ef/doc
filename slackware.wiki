@@ -6,3 +6,29 @@ cd /usr/src/linux
 zcat /proc/config.gz > .config
 make -j2 bzImage
 }}}
+
+=== coping music files to iPhone-XR ===
+{{{sh
+upgradepkg --install-new \
+    ifuse-1.1.4-x86_64-1_SBo.tgz \
+    libimobiledevice-1.3.0-x86_64-1.txz \
+    libplist-2.2.0-x86_64-1.txz \
+    libusbmuxd-2.0.2-x86_64-1.txz \
+    usbmuxd-1.1.1-x86_64-1.txz
+# Connect phone over USB and trusting to host
+ifuse iphone/ --documents org.videolan.vlc-ios # for mount vlc data directory
+fusermount -u iphone/
+ifuse --list-apps # for list of installed to iPhone applications
+}}}
+==== mounting of vlc data directory at xfce ====
+{{{sh
+upgradepkg util-linux-2.36-x86_64-1.txz
+vim /usr/bin/ifuse.vlc
+    #!/usr/bin/env bash
+    exec /usr/bin/ifuse --documents org.videolan.vlc-ios $*
+chmod +x /usr/bin/ifuse.vlc
+echo "ifuse.vlc /mnt/iphone.vlc fuse noauto,users,allow_other,comment=x-gvfs-show 0 0" >> /etc/fstab
+}}}
+----
+- https://wiki.gentoo.org/wiki/Iphone_USB_Tethering
+- https://github.com/libimobiledevice/ifuse
