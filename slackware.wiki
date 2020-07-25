@@ -27,6 +27,8 @@ vim /usr/bin/ifuse.vlc
     #!/usr/bin/env bash
     exec /usr/bin/ifuse --documents org.videolan.vlc-ios $*
 chmod +x /usr/bin/ifuse.vlc
+mkdir /mnt/iphone.vlc; chmod 777 /mnt/iphone.vlc
+echo "user_allow_other" >> /etc/fuse.conf
 echo "ifuse.vlc /mnt/iphone.vlc fuse noauto,users,allow_other,comment=x-gvfs-show 0 0" >> /etc/fstab
 }}}
 ----
