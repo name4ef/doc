@@ -10,9 +10,9 @@ passwd # set password for root
 }}}
 ==== basic action ====
  - create efi, swap and root partitions over cfdisk (gpt)
- - mkfs.vfat /dev/sda1; mkfs.ext4 /dev/sda2; #TODO sda1, sda2?
- - mkswap /dev/sda1; swapon /dev/sda1 #TODO sda1?
- - mount /dev/sda2 /mnt/gentoo && cd /mnt/gentoo #TODO sda2?
+ - mkfs.vfat /dev/sda1; mkfs.ext4 /dev/sda3
+ - mkswap /dev/sda2; swapon /dev/sda2
+ - mount /dev/sda3 /mnt/gentoo && cd /mnt/gentoo
  - links https://www.gentoo.org/downloads/mirrors/
      - select mirror (http yandex, for example)
      - go to *releases/amd64/autobuilds/current-stage3-amd64* directory
@@ -20,7 +20,7 @@ passwd # set password for root
          - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz*
          - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz.DIGESTS.asc*
  - grep $(openssl dgst -r -sha512 stage3-amd64-*.tar.xz) *.asc
- - tar xpvf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
+ - tar xpf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner
  - vi etc/portage/make.conf
      - MAKEOPTS="-j4"
      - GENTOO_MIRRORS="http://mirror.yandex.ru/gentoo-distfiles/" # mirrorselect -i -o >> etc/portage/make.conf
@@ -35,7 +35,7 @@ passwd # set password for root
  - echo "Asia/Tomsk" > /etc/timezone && emerge --config sys-libs/timezone-data
  - emerge vim
  - vim /etc/locale.gen
-     - uncomment: en_US.UTF-8 UTF-8
+     - en_US.UTF-8 UTF-8
  - locale-gen
  - eselect locale list
  - eselect locale set 3 # (en_US.utf8)
@@ -62,6 +62,7 @@ passwd # set password for root
  - mkdir /boot/efi; mount /boot/efi
  - grub-install --target=x86_64-efi --efi-directory=/boot/efi
  - grub-mkconfig -o /boot/grub/grub.cfg
+ - umount /boot/efi
 ==== configure wirelss network ====
  - emerge net-wireless/wpa_supplicant
  - wpa_passphrase <SSID> >> /etc/wpa_supplicant/wpa_supplicant.conf
@@ -70,8 +71,7 @@ passwd # set password for root
  - rc-update add wpa_supplicant # /etc/init.d/wpa_supplicant start
 ==== final steps ====
  - exit
- - cd
- - umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -R /mnt/gentoo
+ - cd; umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -R /mnt/gentoo
  - reboot
 ----
  - https://www.gentoo.org/get-started/
