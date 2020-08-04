@@ -105,3 +105,6 @@ https://code-maven.com/display-notification-from-the-mac-command-line
 
 === something like netstat ===
 `lsof -nP -iTCP | grep LISTEN`
+
+=== something like ldd ===
+`otool -L`
