@@ -122,3 +122,8 @@ cd /etc/init.d
 ln -s net.lo net.enp2s0
 rc-update add net.enp2s0 default
 }}}
+
+=== masked by: ~amd64 keyword ===
+{{{sh
+echo 'ACCEPT_KEYWORDS="~amd64"' >> /etc/portage/make.conf
+}}}
