@@ -8,13 +8,30 @@ VBoxManage controlvm gentoo usbattach 1d4a7b5a-e244-4b5b-b110-487b08ffaccb
 {{{sh
 fs0:
 edit startup.nsh
+    fs0:
     cd EFI/gentoo
     grubx64.efi
 }}}
 
 === creating virtual machine ===
 {{{sh
+VBoxManage list ostypes|less
 VBoxManage createvm --name gentoo --ostype linux26_64 --register
+
+VBoxManage storagectl gentoo --name SATA --add sata --portcount 2
+VBoxManage createmedium disk --size 24576 \
+    --filename ~/VirtualBox\ VMs/gentoo/gentoo.vdi
+VBoxManage storageattach gentoo --storagectl SATA --port 0 --device 0 \
+    --type hdd --medium ~/VirtualBox\ VMs/gentoo/gentoo.vdi
+#VBoxManage list hdds
+#VBoxManage closemedium disk ~/VirtualBox\ VMs/gentoo/gentoo.vbi --delete
+VBoxManage storageattach gentoo --storagectl SATA --port 1 --device 0 \
+    --type dvddrive --medium ~/iso/gentoo-amd64-minimal-20200722T214503Z.iso
+
+VBoxManage modifyvm gentoo --memory 8192 --vram 128 --cpus 4
+VBoxManage modifyvm gentoo --firmware efi --rtcuseutc on
+VBoxManage modifyvm gentoo --nic1 bridged --bridgeadapter1 eno1
+VBoxManage modifyvm gentoo --chipset ich9 --pciattach 05:00.0
 }}}
 
 === forwarding pci-e to guest machine ===
@@ -28,4 +45,9 @@ VBoxManage modifyvm gentoo --pciattach 05:00.0
 {{{sh
 VBoxManage storageattach gentoo --storagectl SATA --port 1 --device 0 \
     --type dvddrive --medium none
+}}}
+
+=== machine is already locked for a session (or being unlocked) ===
+{{{sh
+VBoxManage startvm gentoo --type emergencystop
 }}}
