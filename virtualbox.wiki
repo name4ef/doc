@@ -34,11 +34,21 @@ VBoxManage modifyvm gentoo --nic1 bridged --bridgeadapter1 eno1
 VBoxManage modifyvm gentoo --chipset ich9 --pciattach 05:00.0
 }}}
 
-=== forwarding pci-e to guest machine ===
+=== passthrough pci-e to guest machine ===
 {{{sh
 VBoxManage modifyvm gentoo --pciattach 05:00.0
 #VBoxManage showvminfo gentoo|less
 #VBoxManage modifyvm gentoo --chipset ich9
+dmesg |grep IOMMU
+    [   18.522700] vboxpci: IOMMU not found (not registered)
+sudo vim /etc/default/grub
+    GRUB_CMDLINE_LINUX="intel_iommu=on"
+sudo update-grub &&
+sudo reboot
+dmesg |grep IOMMU
+    [    0.073065] DMAR: IOMMU enabled
+    [   28.956659] vboxpci: IOMMU not found (not registered)
+# Which should show if VT-d is enabled in BIOS. #https://forums.virtualbox.org/viewtopic.php?f=7&t=83085
 }}}
 
 === detach dvddrive ===
