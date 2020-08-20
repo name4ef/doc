@@ -42,14 +42,29 @@ VBoxManage modifyvm gentoo --pciattach 05:00.0
 dmesg |grep IOMMU
     [   18.522700] vboxpci: IOMMU not found (not registered)
 sudo vim /etc/default/grub
-    GRUB_CMDLINE_LINUX="intel_iommu=on"
+    #GRUB_CMDLINE_LINUX="intel_iommu=on"
+    GRUB_CMDLINE_LINUX="intel_iommu=on intel_iommu=pt"
 sudo update-grub &&
 sudo reboot
 dmesg |grep IOMMU
     [    0.073065] DMAR: IOMMU enabled
     [   28.956659] vboxpci: IOMMU not found (not registered)
-# Which should show if VT-d is enabled in BIOS. #https://forums.virtualbox.org/viewtopic.php?f=7&t=83085
+# turn on VT-d option in BIOS
+dmesg |grep IOMMU
+	[    0.073116] DMAR: IOMMU enabled
+	[    0.149286] DMAR-IR: IOAPIC id 8 under DRHD base  0xfed91000 IOMMU 1
+	[   31.216940] vboxpci: IOMMU found
+dmesg -H
+	[Aug20 17:07] DMAR: DRHD: handling fault status reg 3
+	[  +0.000010] DMAR: [DMA Write] Request device [05:00.0] PASID ffffffff fault addr 3cd00000 [fault reason 05] PTE Write access is not set
+	[  +0.000039] DMAR: DRHD: handling fault status reg 3
+	[  +0.000008] DMAR: [DMA Write] Request device [05:00.0] PASID ffffffff fault addr 3cd01000 [fault reason 05] PTE Write access is not set
+	[  +0.000010] DMAR: DRHD: handling fault status reg 3
+	[  +0.000004] DMAR: [DMA Write] Request device [05:00.0] PASID ffffffff fault addr 3cd01000 [fault reason 05] PTE Write access is not set
+	[  +0.000009] DMAR: DRHD: handling fault status reg 3
 }}}
+----
+- https://forums.virtualbox.org/viewtopic.php?f=7&t=83085
 
 === detach dvddrive ===
 {{{sh
