@@ -35,20 +35,13 @@ VBoxManage modifyvm gentoo --chipset ich9 --pciattach 05:00.0
 }}}
 
 === passthrough pci-e to guest machine ===
+*WARNING*: Linux host: Drop PCI passthrough, the current code is too incomplete
+(cannot handle PCIe devices at all), i.e. not useful enough
+//from ChangeLog of version 6.1.0; https://www.virtualbox.org/wiki/Changelog
 {{{sh
 VBoxManage modifyvm gentoo --pciattach 05:00.0
 #VBoxManage showvminfo gentoo|less
 #VBoxManage modifyvm gentoo --chipset ich9
-dmesg |grep IOMMU
-    [   18.522700] vboxpci: IOMMU not found (not registered)
-sudo vim /etc/default/grub
-    #GRUB_CMDLINE_LINUX="intel_iommu=on"
-    GRUB_CMDLINE_LINUX="intel_iommu=on intel_iommu=pt"
-sudo update-grub &&
-sudo reboot
-dmesg |grep IOMMU
-    [    0.073065] DMAR: IOMMU enabled
-    [   28.956659] vboxpci: IOMMU not found (not registered)
 # turn on VT-d option in BIOS
 dmesg |grep IOMMU
 	[    0.073116] DMAR: IOMMU enabled
@@ -62,9 +55,40 @@ dmesg -H
 	[  +0.000010] DMAR: DRHD: handling fault status reg 3
 	[  +0.000004] DMAR: [DMA Write] Request device [05:00.0] PASID ffffffff fault addr 3cd01000 [fault reason 05] PTE Write access is not set
 	[  +0.000009] DMAR: DRHD: handling fault status reg 3
+dmesg |grep IOMMU
+    [   18.522700] vboxpci: IOMMU not found (not registered)
+sudo vim /etc/default/grub
+    #GRUB_CMDLINE_LINUX="intel_iommu=on"
+    #GRUB_CMDLINE_LINUX="intel_iommu=on intel_iommu=pt"
+    #GRUB_CMDLINE_LINUX="intel_iommu=on intel_iommu=igfx_off"
+    #GRUB_CMDLINE_LINUX="intel_iommu=igfx_off"
+    #GRUB_CMDLINE_LINUX="intel_iommu=on iommu=pt"
+    #append="intel_iommu=on pci-stub.ids=10de:0fe4"
+    #append="intel_iommu=on pci-stub.ids=10de:0fe4 pcie_acs_override=downstream"
+    #append="intel_iommu=on vfio-pci.ids=10de:0fe4"
+    #append="intel_iommu=pt pci-stub.ids=168c:0032 modprobe.blacklist=ath9k"
+    #append="intel_iommu=igfx_off pci-stub.ids=168c:0032 modprobe.blacklist=ath9k"
+    append="intel_iommu=on pci-stub.ids=168c:0032 modprobe.blacklist=ath9k"
+sudo update-grub &&
+sudo reboot
+#https://forum.proxmox.com/threads/hp-proliant-microserver-gen8-raidcontroller-hp-p410-passthrough-probleme.30547/#post-153784
+lspci -n -s 01:00
+vim /lib/modprobe.d/vfio.conf
+    options vfio-pci ids=10DE:0FE4
+#intel_iommu=on      # Intel only
+#iommu=pt iommu=1    # AMD only
+
+rmmod vboxpci &&
+modprobe pci_stub &&
+echo "168c 0032" > /sys/bus/pci/drivers/pci-stub/new_id &&
+echo "0000:03:00.0" > /sys/bus/pci/devices/0000:03:00.0/driver/unbind &&
+echo "0000:03:00.0" > /sys/bus/pci/drivers/pci-stub/bind &&
+modprobe vboxpci
 }}}
 ----
 - https://forums.virtualbox.org/viewtopic.php?f=7&t=83085
+- https://www.linux-kvm.org/page/How_to_assign_devices_with_VT-d_in_KVM
+- https://davidyat.es/2016/09/08/gpu-passthrough/
 
 === detach dvddrive ===
 {{{sh
