@@ -181,3 +181,25 @@ echo 'ACCEPT_KEYWORDS="~amd64"' >> /etc/portage/make.conf
 rm -rf /var/lib/tvheadend
 /etc/init.d/tvheadend start
 }}}
+
+=== enable wake on lan ===
+{{{sh
+emerge --ask sys-apps/ethtool
+
+# Checking and set current WOL status
+#   d - disable
+#   g - wake of MagicPackettm
+ethtool enp4s0 | grep -i wake
+    Supports Wake-on: pumbg
+    Wake-on: d
+ethtool -s enp4s0 wol g
+
+vim /etc/conf.d/net
+    ethtool_change_enp4s0="wol g"
+cd /etc/init.d; ln -s net.lo net.enp4s0
+rc-update add net.enp4s0 default
+openrc
+}}}
+----
+- https://wiki.gentoo.org/wiki/Power_management/Ethernet
+- https://wiki.gentoo.org/wiki/Handbook:X86/Networking/Introduction
