@@ -3,6 +3,5 @@
 
 === only console users are allowed to run the X server (fix it) ===
 {{{sh
-vim /etc/X11/Xwrapper.config
-    allowed_users=anybody
+echo "allowed_users=anybody" >> /etc/X11/Xwrapper.config
 }}}

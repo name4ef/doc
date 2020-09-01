@@ -74,6 +74,7 @@ sudo ext4fuse /dev/disk2s1 mnt -o allow_other
 diskutil list # get partition name (disk2)
 diskutil umountDisk disk2
 sudo dd bs=1m if=<PATH TO ISO> of=/dev/disk2
+diskutil eject disk2
 }}}
 
 === build Xcode project over commend line ===
