@@ -40,11 +40,11 @@ source /etc/profile && export PS1="(chroot) ${PS1}" &&
 emerge-webrsync &&
 emerge --verbose --update --deep --newuse @world &&
 echo "Asia/Tomsk" > /etc/timezone && emerge --config sys-libs/timezone-data &&
-emerge vim &&
 echo "export LANG='en_US.utf8'" >> /etc/profile.env &&
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&
 locale-gen &&
 eselect locale list
+# TODO LC_ALL is empty, why?
 }}}
  - eselect locale set 4 # (en_US.utf8)
 {{{sh
@@ -65,8 +65,9 @@ passwd &&
 emerge app-admin/sysklogd &&
 rc-update add sysklogd default &&
 rc-update add sshd default &&
-emerge sys-fs/e2fsprogs net-misc/dhcpcd &&
-emerge app-misc/tmux app-text/tree sys-process/htop
+emerge sys-fs/e2fsprogs net-misc/dhcpcd sys-apps/ethtool &&
+emerge app-editors/vim dev-util/ctags app-misc/task dev-python/six dev-python/pip &&
+emerge app-misc/tmux app-text/tree sys-process/htop dev-vcs/git
 }}}
 ==== boot over lilo ====
  - emerge --ask sys-boot/lilo
@@ -208,3 +209,12 @@ openrc
 ----
 - https://wiki.gentoo.org/wiki/Power_management/Ethernet
 - https://wiki.gentoo.org/wiki/Handbook:X86/Networking/Introduction
+
+=== remove package ===
+{{{sh
+emerge --deselect dev-python/six
+emerge --depclean -vp
+emerge --ask --verbose --depclean dev-python/six
+}}}
+----
+- https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
