@@ -13,22 +13,22 @@ passwd # set password for root
 {{{sh
 mkfs.vfat /dev/sda1
 mkswap /dev/sda2 && swapon /dev/sda2
-mkfs.ext4 /dev/sda3 && mount /dev/sda3 /mnt/gentoo && cd /mnt/gentoo
+mkfs.ext4 /dev/sda3 && mount /dev/sda3 /mnt/gentoo && cd /mnt/gentoo &&
+links https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-stage3-amd64/
+# or links https://www.gentoo.org/downloads/mirrors/
+#   select mirror
+#   go to *releases/amd64/autobuilds/current-stage3-amd64* directory
 }}}
- - links https://www.gentoo.org/downloads/mirrors/
-     - select mirror (http yandex, for example)
-     - go to *releases/amd64/autobuilds/current-stage3-amd64* directory
-     - downloads:
-         - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz*
-         - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz.DIGESTS.asc*
+- downloads:
+    - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz*
+    - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz.DIGESTS.asc*
 {{{sh
 grep $(openssl dgst -r -sha512 stage3-amd64-*.tar.xz) *.asc &&
 tar xpf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner &&
-cat << EOF >> etc/portage/make.conf
+cat << EOF >> etc/portage/make.conf &&
 MAKEOPTS="-j4"
 GENTOO_MIRRORS="http://mirror.yandex.ru/gentoo-distfiles/" # mirrorselect -i -o >> etc/portage/make.conf
 EOF
-
 mkdir etc/portage/repos.conf &&
 cp usr/share/portage/config/repos.conf etc/portage/repos.conf/gentoo.conf &&
 cp -L /etc/resolv.conf etc/ &&
@@ -46,36 +46,36 @@ echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&
 locale-gen &&
 eselect locale list
 }}}
- - eselect locale set 3 # (en_US.utf8)
+ - eselect locale set 4 # (en_US.utf8)
 {{{sh
 env-update && source /etc/profile && export PS1="(chroot) ${PS1}" &&
-emerge sys-kernel/gentoo-sources
+emerge sys-kernel/gentoo-sources &&
+emerge --ask sys-kernel/genkernel sys-kernel/linux-firmware # (etc-update for apply license)
 }}}
-- emerge --ask sys-kernel/genkernel sys-kernel/linux-firmware # (etc-update for apply license)
 {{{sh
-genkernel all && ls /boot/vmlinuz* /boot/initramfs*
-cat << EOF >> /etc/fstab
+emerge sys-kernel/genkernel sys-kernel/linux-firmware &&
+genkernel all &&
+cat << EOF >> /etc/fstab &&
 /dev/sda1 /boot/efi vfat noauto  0 1
-/dev/sda2 /         ext4 noatime 0 1
-/dev/sda3 none      swap sw      0 0
+/dev/sda2 none      swap sw      0 0
+/dev/sda3 /         ext4 noatime 0 1
 EOF
-passwd
-}}}
-{{{sh
+echo -e "\nPlease set root password:" &&
+passwd &&
 emerge app-admin/sysklogd &&
 rc-update add sysklogd default &&
 rc-update add sshd default &&
 emerge sys-fs/e2fsprogs net-misc/dhcpcd &&
-emerge app-misc/tmux app-text/tree
+emerge app-misc/tmux app-text/tree sys-process/htop
 }}}
 ==== boot over lilo ====
  - emerge --ask sys-boot/lilo
  - liloconfig; vim /etc/lilo.conf; lilo
 ==== boot over grub (UEFI) ====
 {{{sh
-echo 'GRUB_PLATFORMS="efi-64"' >> /etc/portage/make.conf &&
 emerge sys-boot/grub:2 &&
 mkdir /boot/efi && mount /boot/efi &&
+echo 'GRUB_PLATFORMS="efi-64"' >> /etc/portage/make.conf &&
 grub-install --target=x86_64-efi --efi-directory=/boot/efi &&
 grub-mkconfig -o /boot/grub/grub.cfg &&
 umount /boot/efi
@@ -89,6 +89,7 @@ umount /boot/efi
 ==== final steps ====
  - useradd -d /home/user1 -G users,wheel -m user1
  - passwd user1
+ - vim /etc/{conf.d/hostname,hosts} # set hostname
  - exit
 {{{sh
 cd && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -R /mnt/gentoo &&
@@ -131,7 +132,11 @@ emerge net-misc/iputils
 === write iso image of Windows to usb flash ===
 `woeusb --device Win10_1909_Russian_x64.iso /dev/sdc`
 
-set hostname: `vim /etc/{conf.d/hostname,hosts}`
+=== set hostname ===
+{{{sh
+vim /etc/{conf.d/hostname,hosts}
+hostname <hostname>
+}}}
 
 === usage only needed network interface (ex. wired only) ===
 {{{sh
