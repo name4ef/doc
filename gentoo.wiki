@@ -238,3 +238,43 @@ qemu-system-x86_64 \
     -usb -device usb-tablet \
     -usb -device usb-ehci -device usb-host,vendorid=0x0572,productid=0xc68a
 }}}
+==== pci-passthrough ====
+{{{sh
+lscpu | grep -E "vmx|svm" # VT-x or AMD-V must be supported by the processor
+# Go into BIOS (EFI) settings and turn on VT-d and IOMMU support
+# Note: Some EFI doesn't have IOMMU configuration settings
+vim /etc/default/grub
+    GRUB_CMDLINE_LINUX="iommu=pt intel_iommu=on pcie_acs_override=downstream,multifunction"
+grub-mkconfig -o /boot/grub/grub.cfg
+reboot
+
+dmesg | grep 'IOMMU enabled'
+for d in /sys/kernel/iommu_groups/*/devices/*; do
+    n=${d#*/iommu_groups/*}; n=${n%%/*}
+    printf 'IOMMU Group %s ' "$n"
+    lspci -nns "${d##*/}"
+done # In IOMMU group 13 wireless networking controller only - it's fine
+lspci -nn | grep Wireless
+    03:00.0 Network controller [0280]: Qualcomm Atheros AR9485 Wireless Network Adapter [168c:0032] (rev 01)
+vim /etc/modprobe.d/vfio.conf
+    options vfio-pci ids=168c:0032
+reboot
+
+echo 0000:03:00.0 > /sys/bus/pci/devices/0000\:03\:00.0/driver/unbind
+modprobe vfio-pci
+
+export DISK=ubuntu-18.qcow2
+qemu-system-x86_64 \
+    -cpu host -enable-kvm -machine accel=kvm \
+    -smp 4,sockets=1,cores=2,threads=2 \
+    -m 4G \
+    -drive file=$DISK,if=virtio \
+    -net user,hostfwd=tcp::2222-:22 -net nic \
+    -display default,show-cursor=on -vga virtio \
+    -usb -device usb-tablet \
+    -device vfio-pci,host=03:00.0
+}}}
+----
+- https://wiki.gentoo.org/wiki/GPU_passthrough_with_libvirt_qemu_kvm
+- https://davidyat.es/2016/09/08/gpu-passthrough/
+- https://www.kernel.org/doc/Documentation/vfio.txt
