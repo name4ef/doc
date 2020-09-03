@@ -40,6 +40,7 @@ source /etc/profile && export PS1="(chroot) ${PS1}" &&
 emerge-webrsync &&
 emerge --verbose --update --deep --newuse @world &&
 echo "Asia/Tomsk" > /etc/timezone && emerge --config sys-libs/timezone-data &&
+emerge net-misc/ntp && ntpd -q -g &&
 echo "export LANG='en_US.utf8'" >> /etc/profile.env &&
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&
 locale-gen &&
@@ -65,6 +66,7 @@ passwd &&
 emerge app-admin/sysklogd &&
 rc-update add sysklogd default &&
 rc-update add sshd default &&
+rc-update add ntpd &&
 emerge sys-fs/e2fsprogs net-misc/dhcpcd sys-apps/ethtool &&
 emerge app-editors/vim dev-util/ctags app-misc/task dev-python/six dev-python/pip &&
 emerge app-misc/tmux app-text/tree sys-process/htop dev-vcs/git
@@ -218,3 +220,21 @@ emerge --ask --verbose --depclean dev-python/six
 }}}
 ----
 - https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
+
+=== qemu ===
+{{{sh
+echo "app-emulation/qemu usb" >> /etc/portage/package.use
+emerge -a app-emulation/qemu sys-apps/usbutils
+usermod -aG kvm usb user1
+
+export DISK=ubuntu-18.qcow2
+qemu-system-x86_64 \
+    -cpu host -enable-kvm -machine accel=kvm \
+    -smp 4,sockets=1,cores=2,threads=2 \
+    -m 4G \
+    -drive file=$DISK,if=virtio \
+    -net user,hostfwd=tcp::2222-:22 -net nic \
+    -display default,show-cursor=on -vga virtio \
+    -usb -device usb-tablet \
+    -usb -device usb-ehci -device usb-host,vendorid=0x0572,productid=0xc68a
+}}}
