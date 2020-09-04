@@ -11,6 +11,7 @@ passwd # set password for root
 ==== basic action ====
  - create efi, swap and root partitions over cfdisk (gpt)
 {{{sh
+# WARNING: partitions of sda will be overwrited
 mkfs.vfat /dev/sda1
 mkswap /dev/sda2 && swapon /dev/sda2
 mkfs.ext4 /dev/sda3 && mount /dev/sda3 /mnt/gentoo && cd /mnt/gentoo &&
@@ -49,11 +50,11 @@ eselect locale list
 }}}
  - eselect locale set 4 # (en_US.utf8)
 {{{sh
+# WARNING: check correctness partitions in fstab
 env-update && source /etc/profile && export PS1="(chroot) ${PS1}" &&
 emerge sys-kernel/gentoo-sources &&
-emerge --ask sys-kernel/genkernel sys-kernel/linux-firmware # (etc-update for apply license)
-}}}
-{{{sh
+emerge --ask sys-kernel/genkernel sys-kernel/linux-firmware &&
+etc-update &&
 emerge sys-kernel/genkernel sys-kernel/linux-firmware &&
 genkernel all &&
 cat << EOF >> /etc/fstab &&
