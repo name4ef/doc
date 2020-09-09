@@ -12,9 +12,12 @@ passwd # set password for root
  - create efi, swap and root partitions over cfdisk (gpt)
 {{{sh
 # WARNING: partitions of sda will be overwrited
-mkfs.vfat /dev/sda1
-mkswap /dev/sda2 && swapon /dev/sda2
-mkfs.ext4 /dev/sda3 && mount /dev/sda3 /mnt/gentoo && cd /mnt/gentoo &&
+export  _EFI=/dev/vda1 &&
+export _SWAP=/dev/vda2 &&
+export _ROOT=/dev/vda3 &&
+mkfs.vfat $_EFI &&
+mkswap $_SWAP && swapon $_SWAP &&
+mkfs.ext4 $_ROOT && mount $_ROOT /mnt/gentoo && cd /mnt/gentoo &&
 links https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-stage3-amd64/
 # or links https://www.gentoo.org/downloads/mirrors/
 #   select mirror
@@ -27,7 +30,7 @@ links https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/curren
 grep $(openssl dgst -r -sha512 stage3-amd64-*.tar.xz) *.asc &&
 tar xpf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner &&
 cat << EOF >> etc/portage/make.conf &&
-MAKEOPTS="-j4"
+MAKEOPTS="-j5"
 GENTOO_MIRRORS="http://mirror.yandex.ru/gentoo-distfiles/" # mirrorselect -i -o >> etc/portage/make.conf
 EOF
 mkdir etc/portage/repos.conf &&
@@ -50,27 +53,24 @@ eselect locale list
 }}}
  - eselect locale set 4 # (en_US.utf8)
 {{{sh
-# WARNING: check correctness partitions in fstab
 env-update && source /etc/profile && export PS1="(chroot) ${PS1}" &&
-emerge sys-kernel/gentoo-sources &&
-emerge --ask sys-kernel/genkernel sys-kernel/linux-firmware &&
-etc-update &&
-emerge sys-kernel/genkernel sys-kernel/linux-firmware &&
+echo "sys-kernel/linux-firmware linux-fw-redistributable no-source-code" >> /etc/portage/package.license &&
+emerge \
+    sys-kernel/gentoo-sources sys-kernel/genkernel sys-kernel/linux-firmware \
+    app-admin/sysklogd sys-fs/e2fsprogs net-misc/dhcpcd sys-apps/ethtool \
+    app-editors/vim dev-util/ctags app-misc/task dev-python/six dev-python/pip \
+    app-misc/tmux app-text/tree sys-process/htop dev-vcs/git &&
 genkernel all &&
 cat << EOF >> /etc/fstab &&
-/dev/sda1 /boot/efi vfat noauto  0 1
-/dev/sda2 none      swap sw      0 0
-/dev/sda3 /         ext4 noatime 0 1
+$_EFI /boot/efi vfat noauto  0 1
+$_SWAP none      swap sw      0 0
+$_ROOT /         ext4 noatime 0 1
 EOF
-echo -e "\nPlease set root password:" &&
-passwd &&
-emerge app-admin/sysklogd &&
 rc-update add sysklogd default &&
 rc-update add sshd default &&
 rc-update add ntpd &&
-emerge sys-fs/e2fsprogs net-misc/dhcpcd sys-apps/ethtool &&
-emerge app-editors/vim dev-util/ctags app-misc/task dev-python/six dev-python/pip &&
-emerge app-misc/tmux app-text/tree sys-process/htop dev-vcs/git
+echo -e "\nPlease set root password:" &&
+passwd
 }}}
 ==== boot over lilo ====
  - emerge --ask sys-boot/lilo
