@@ -8,13 +8,22 @@ ntpd -q -g
 /etc/init.d/sshd start
 passwd # set password for root
 }}}
+==== chroot && poweroff ====
+{{{sh
+export _ROOT=/dev/sda3 &&
+mount $_ROOT /mnt/gentoo && cd /mnt/gentoo &&
+mount -t proc /proc proc/ && mount -R /sys sys/ && mount -R /dev dev/ &&
+chroot . /bin/bash &&
+cd && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -R /mnt/gentoo &&
+poweroff
+}}}
 ==== basic action ====
  - create efi, swap and root partitions over cfdisk (gpt)
 {{{sh
 # WARNING: partitions of sda will be overwrited
-export  _EFI=/dev/vda1 &&
-export _SWAP=/dev/vda2 &&
-export _ROOT=/dev/vda3 &&
+export  _EFI=/dev/sda1 &&
+export _SWAP=/dev/sda2 &&
+export _ROOT=/dev/sda3 &&
 mkfs.vfat $_EFI &&
 mkswap $_SWAP && swapon $_SWAP &&
 mkfs.ext4 $_ROOT && mount $_ROOT /mnt/gentoo && cd /mnt/gentoo &&
@@ -73,12 +82,33 @@ echo -e "\nPlease set root password:" &&
 passwd
 }}}
 ==== boot over lilo ====
- - emerge --ask sys-boot/lilo
- - liloconfig; vim /etc/lilo.conf; lilo
+{{{sh
+emerge sys-boot/lilo &&
+liloconfig && vim /etc/lilo.conf && lilo
+}}}
+May be useful for qemu:
+{{{lilo
+lba32
+compact
+boot = /dev/vda
+map = /boot/map
+install = menu
+menu-scheme = Wb:Yr:Wb:Wb
+prompt
+timeout = 00
+vga = normal
+disk = /dev/vda bios=0x80 max-partitions=7
+
+image = /boot/vmlinuz-5.4.60-gentoo-x86_64
+    initrd = /boot/initramfs-5.4.60-gentoo-x86_64.img
+    label = "Linux"
+    root = /dev/vda3
+    read-only
+}}}
 ==== boot over grub (UEFI) ====
 {{{sh
 emerge sys-boot/grub:2 &&
-mkdir /boot/efi && mount /boot/efi &&
+mkdir -p /boot/efi && mount /boot/efi &&
 echo 'GRUB_PLATFORMS="efi-64"' >> /etc/portage/make.conf &&
 grub-install --target=x86_64-efi --efi-directory=/boot/efi &&
 grub-mkconfig -o /boot/grub/grub.cfg &&
@@ -91,11 +121,13 @@ umount /boot/efi
     wpa_supplicant_args="-D wext -i wlp1s0 -c /etc/wpa_supplicant/wpa_supplicant.conf -B"
  - rc-update add wpa_supplicant # /etc/init.d/wpa_supplicant start
 ==== final steps ====
- - useradd -d /home/user1 -G users,wheel -m user1
- - passwd user1
- - vim /etc/{conf.d/hostname,hosts} # set hostname
- - exit
 {{{sh
+export _USER=user1 &&
+useradd -d /home/$_USER -G users,wheel -m $_USER &&
+passwd $_USER &&
+vim /etc/{conf.d/hostname,hosts} && # set hostname
+exit
+
 cd && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -R /mnt/gentoo &&
 reboot
 }}}
@@ -279,3 +311,24 @@ qemu-system-x86_64 \
 - https://wiki.gentoo.org/wiki/GPU_passthrough_with_libvirt_qemu_kvm
 - https://davidyat.es/2016/09/08/gpu-passthrough/
 - https://www.kernel.org/doc/Documentation/vfio.txt
+=== boot trought uefi ===
+{{{sh
+emerge sys-firmware/edk2-ovmf
+qemu-system-x86_64 \
+    -bios /usr/share/edk2-ovmf/OVMF_CODE.fd \
+    -cdrom /usr/share/edk2-ovmf/UefiShell.iso
+}}}
+
+=== grub automaticly detect other OS ===
+{{{sh
+emerge --ask --newuse sys-boot/os-prober
+grub-mkconfig -o /tmp/grub.cfg # place for grub config
+}}}
+
+=== show file of package ===
+{{{sh
+emerge app-portage/gentoolkit
+equery files --tree sys-firmware/edk2-ovmf
+}}}
+----
+- https://wiki.gentoo.org/wiki/Equery
