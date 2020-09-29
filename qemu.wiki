@@ -27,3 +27,10 @@ qemu-system-x86_64 -curses
 }}}
 ----
  - https://davidyat.es/2016/09/08/gpu-passthrough/
+
+=== was helpful for passthrough of usb modem ===
+{{{sh
+/etc/init.d/udev stop
+echo -n "usb3" > /sys/bus/usb/drivers/usb/unbind
+echo -n "usb3" > /sys/bus/usb/drivers/usb/bind
+}}}
