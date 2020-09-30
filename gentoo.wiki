@@ -332,3 +332,23 @@ equery files --tree sys-firmware/edk2-ovmf
 }}}
 ----
 - https://wiki.gentoo.org/wiki/Equery
+
+=== play file through gst-launch to fbdev ===
+{{{sh
+emerge \
+    media-libs/gstreamer \
+    media-libs/gst-plugins-good \
+    media-plugins/gst-plugins-libav
+EXTRA_ECONF="--enable-fbdev" emerge media-libs/gst-plugins-bad
+usermod -aG video user1
+gst-launch-1.0 filesrc location=video03.mp4 \
+    ! qtdemux \
+    ! h264parse \
+    ! avdec_h264 \
+    ! videoconvert \
+    ! deinterlace \
+    ! fbdevsink
+}}}
+----
+- https://lists.archive.carbon60.com/gentoo/user/166724
+- https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
