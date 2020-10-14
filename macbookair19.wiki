@@ -8,6 +8,7 @@
      - boost clock: 1050
      - max gflops: 403.2
  - model: MacBookAir8,2 A1932 (https://en.wikipedia.org/wiki/MacBook_Air)
+ - screwdrivers for disassembly: crv-1.2, t3, t4
 
 === boot from linux usb drive ===
 reboot: hold down *Command+R*
