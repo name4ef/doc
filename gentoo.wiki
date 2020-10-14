@@ -245,11 +245,23 @@ openrc
 - https://wiki.gentoo.org/wiki/Power_management/Ethernet
 - https://wiki.gentoo.org/wiki/Handbook:X86/Networking/Introduction
 
+=== install xserver and dwm and so on===
+{{{sh
+echo 'USE="consolekit -elogind -systemd"' >> /etc/portage/make.conf
+emerge -a xorg-server xdm dwm dmenu x11-terms/st x11-apps/setxkbmap
+}}}
+
+{{{sh
+emerge --ask --verbose --depclean x11-wm/dwm
+qlist -IC 'x11-base/*' 'x11-drivers/*'
+quse elogind
+}}}
+
 === remove package ===
 {{{sh
 emerge --deselect dev-python/six
-emerge --depclean -vp
-emerge --ask --verbose --depclean dev-python/six
+emerge -cvp
+emerge -c
 }}}
 ----
 - https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
@@ -318,6 +330,10 @@ qemu-system-x86_64 \
     -bios /usr/share/edk2-ovmf/OVMF_CODE.fd \
     -cdrom /usr/share/edk2-ovmf/UefiShell.iso
 }}}
+=== set framebuffer resolution (1920x1080) ===
+{{{sh
+emerge -a x11-drivers/xf86-video-qxl
+}}}
 
 === grub automaticly detect other OS ===
 {{{sh
@@ -352,3 +368,14 @@ gst-launch-1.0 filesrc location=video03.mp4 \
 ----
 - https://lists.archive.carbon60.com/gentoo/user/166724
 - https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
+
+=== monitorix and so on ===
+{{{#sh
+emerge -av \
+    www-misc/monitorix \
+    app-admin/hddtemp \
+    sys-apps/lm-sensors \
+    sys-apps/smartmontools
+rc-update add monitorix default
+openrc
+}}}
