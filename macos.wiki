@@ -73,7 +73,8 @@ sudo ext4fuse /dev/disk2s1 mnt -o allow_other
 {{{sh
 diskutil list # get partition name (disk2)
 diskutil umountDisk disk2
-sudo dd bs=4k if=<PATH TO ISO> of=/dev/disk2
+sudo dd bs=1m if=<PATH TO ISO> of=/dev/disk2
+diskutil eject disk2
 }}}
 
 === build Xcode project over commend line ===
@@ -108,3 +109,22 @@ https://code-maven.com/display-notification-from-the-mac-command-line
 
 === something like ldd ===
 `otool -L`
+
+=== running qemu vm ===
+{{{sh
+brew install qemu
+
+#dd if=/dev/zero of=ubuntu.img bs=1g seek=24 count=0
+qemu-img create -f qcow2 ubuntu.qcow2 24G
+
+    #-display curses,show-cursor=on -vga virtio \
+    #-cdrom ~/iso/ubuntu-16.04.6-desktop-amd64.iso \
+qemu-system-x86_64 \
+    -cpu host -enable-kvm -machine accel=hvf \
+    -smp 4,sockets=1,cores=2,threads=2 \
+    -m 4G \
+    -drive file=ubuntu.qcow2,if=virtio \
+    -net user,hostfwd=tcp::2222-:22 -net nic \
+    -display default,show-cursor=on -vga virtio \
+    -usb -device usb-tablet
+}}}

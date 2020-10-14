@@ -1,0 +1,102 @@
+=== attaching usb device ===
+{{{sh
+VBoxManage list usbhost # get uuid of device (1d4a7b5a-e244-4b5b-b110-487b08ffaccb)
+VBoxManage controlvm gentoo usbattach 1d4a7b5a-e244-4b5b-b110-487b08ffaccb
+}}}
+
+=== startup.nsh ===
+{{{sh
+fs0:
+edit startup.nsh
+    fs0:
+    cd EFI/gentoo
+    grubx64.efi
+}}}
+
+=== creating virtual machine ===
+{{{sh
+VBoxManage list ostypes|less
+VBoxManage createvm --name gentoo --ostype linux26_64 --register
+
+VBoxManage storagectl gentoo --name SATA --add sata --portcount 2
+VBoxManage createmedium disk --size 24576 \
+    --filename ~/VirtualBox\ VMs/gentoo/gentoo.vdi
+VBoxManage storageattach gentoo --storagectl SATA --port 0 --device 0 \
+    --type hdd --medium ~/VirtualBox\ VMs/gentoo/gentoo.vdi
+#VBoxManage list hdds
+#VBoxManage closemedium disk ~/VirtualBox\ VMs/gentoo/gentoo.vbi --delete
+VBoxManage storageattach gentoo --storagectl SATA --port 1 --device 0 \
+    --type dvddrive --medium ~/iso/gentoo-amd64-minimal-20200722T214503Z.iso
+
+VBoxManage modifyvm gentoo --memory 8192 --vram 128 --cpus 4
+VBoxManage modifyvm gentoo --firmware efi --rtcuseutc on
+VBoxManage modifyvm gentoo --nic1 bridged --bridgeadapter1 eno1
+VBoxManage modifyvm gentoo --chipset ich9 --pciattach 05:00.0
+}}}
+
+=== passthrough pci-e to guest machine ===
+*WARNING*: Linux host: Drop PCI passthrough, the current code is too incomplete
+(cannot handle PCIe devices at all), i.e. not useful enough
+//from ChangeLog of version 6.1.0; https://www.virtualbox.org/wiki/Changelog
+{{{sh
+VBoxManage modifyvm gentoo --pciattach 05:00.0
+#VBoxManage showvminfo gentoo|less
+#VBoxManage modifyvm gentoo --chipset ich9
+# turn on VT-d option in BIOS
+dmesg |grep IOMMU
+	[    0.073116] DMAR: IOMMU enabled
+	[    0.149286] DMAR-IR: IOAPIC id 8 under DRHD base  0xfed91000 IOMMU 1
+	[   31.216940] vboxpci: IOMMU found
+dmesg -H
+	[Aug20 17:07] DMAR: DRHD: handling fault status reg 3
+	[  +0.000010] DMAR: [DMA Write] Request device [05:00.0] PASID ffffffff fault addr 3cd00000 [fault reason 05] PTE Write access is not set
+	[  +0.000039] DMAR: DRHD: handling fault status reg 3
+	[  +0.000008] DMAR: [DMA Write] Request device [05:00.0] PASID ffffffff fault addr 3cd01000 [fault reason 05] PTE Write access is not set
+	[  +0.000010] DMAR: DRHD: handling fault status reg 3
+	[  +0.000004] DMAR: [DMA Write] Request device [05:00.0] PASID ffffffff fault addr 3cd01000 [fault reason 05] PTE Write access is not set
+	[  +0.000009] DMAR: DRHD: handling fault status reg 3
+dmesg |grep IOMMU
+    [   18.522700] vboxpci: IOMMU not found (not registered)
+sudo vim /etc/default/grub
+    #GRUB_CMDLINE_LINUX="intel_iommu=on"
+    #GRUB_CMDLINE_LINUX="intel_iommu=on intel_iommu=pt"
+    #GRUB_CMDLINE_LINUX="intel_iommu=on intel_iommu=igfx_off"
+    #GRUB_CMDLINE_LINUX="intel_iommu=igfx_off"
+    #GRUB_CMDLINE_LINUX="intel_iommu=on iommu=pt"
+    #append="intel_iommu=on pci-stub.ids=10de:0fe4"
+    #append="intel_iommu=on pci-stub.ids=10de:0fe4 pcie_acs_override=downstream"
+    #append="intel_iommu=on vfio-pci.ids=10de:0fe4"
+    #append="intel_iommu=pt pci-stub.ids=168c:0032 modprobe.blacklist=ath9k"
+    #append="intel_iommu=igfx_off pci-stub.ids=168c:0032 modprobe.blacklist=ath9k"
+    append="intel_iommu=on pci-stub.ids=168c:0032 modprobe.blacklist=ath9k"
+sudo update-grub &&
+sudo reboot
+#https://forum.proxmox.com/threads/hp-proliant-microserver-gen8-raidcontroller-hp-p410-passthrough-probleme.30547/#post-153784
+lspci -n -s 01:00
+vim /lib/modprobe.d/vfio.conf
+    options vfio-pci ids=10DE:0FE4
+#intel_iommu=on      # Intel only
+#iommu=pt iommu=1    # AMD only
+
+rmmod vboxpci &&
+modprobe pci_stub &&
+echo "168c 0032" > /sys/bus/pci/drivers/pci-stub/new_id &&
+echo "0000:03:00.0" > /sys/bus/pci/devices/0000:03:00.0/driver/unbind &&
+echo "0000:03:00.0" > /sys/bus/pci/drivers/pci-stub/bind &&
+modprobe vboxpci
+}}}
+----
+- https://forums.virtualbox.org/viewtopic.php?f=7&t=83085
+- https://www.linux-kvm.org/page/How_to_assign_devices_with_VT-d_in_KVM
+- https://davidyat.es/2016/09/08/gpu-passthrough/
+
+=== detach dvddrive ===
+{{{sh
+VBoxManage storageattach gentoo --storagectl SATA --port 1 --device 0 \
+    --type dvddrive --medium none
+}}}
+
+=== machine is already locked for a session (or being unlocked) ===
+{{{sh
+VBoxManage startvm gentoo --type emergencystop
+}}}

@@ -1,0 +1,36 @@
+=== passthrough ===
+ - ubuntu-18
+{{{sh
+sudo apt-get update
+sudo apt-get install qemu-kvm seabios qemu-utils hugepages ovmf
+kvm-ok
+    INFO: /dev/kvm exists
+    KVM acceleration can be used
+lsmod |grep kvm
+    kvm_intel             253952  0
+    kvm                   655360  1 kvm_intel
+    
+## setting up hugepages
+#hugeadm --explain
+#sudo vim /etc/default/qemu-kvm
+#    KVM_HUGEPAGES=1
+#grep "Hugepagesize:" /proc/meminfo
+#    Hugepagesize:       2048 kB
+##amount_of_RAM / hugepagesize + small_buffer = vm.nr_hugepages
+##8192M / 2048k + 7.5% = 4300
+#sudo vim /etc/sysctl.conf
+#    vm.nr_hugepages = 4300
+    
+# creating the vm
+dd if=/dev/zero of=ubuntu20.img bs=1M seek=24000 count=0
+qemu-system-x86_64 -curses
+}}}
+----
+ - https://davidyat.es/2016/09/08/gpu-passthrough/
+
+=== was helpful for passthrough of usb modem ===
+{{{sh
+/etc/init.d/udev stop
+echo -n "usb3" > /sys/bus/usb/drivers/usb/unbind
+echo -n "usb3" > /sys/bus/usb/drivers/usb/bind
+}}}

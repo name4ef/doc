@@ -1,0 +1,36 @@
+=== recreate certificate ===
+{{{sh
+#openssl x509 -in ca.pem -text # show certificate info
+echo "net-libs/gnutls tools" >> /etc/portage/package.use
+emerge -a net-libs/gnutls
+
+cd /usr/share/taskd/pki/; chmod +x generate*; ./generate
+cd /etc/taskd/tls
+for n in *.pem; do mv $n $n.mv; done # making backup
+cp /usr/share/taskd/pki/*.pem .
+for n in *.cert.*; do nn=$(echo $n| sed "s/cert/crt/g"); mv $n $nn; done
+chown taskd:taskd server.*.pem ca.crt.pem
+scp ca.crt.pem client.crt.pem client.key.pem some.client.host:.task/keys
+rm -f *.mv /usr/share/taskd/pki/*.pem # taking out garbage
+}}}
+/etc/taskd/config:
+{{{config
+confirmation=1
+extensions=/usr/libexec/taskd
+ip.log=on
+log=/var/log/taskd/taskd.log
+pid.file=/run/taskd.pid
+queue.size=10
+request.limit=1048576
+root=/var/lib/taskd
+server=0.0.0.0:53589
+trust=strict
+verbose=1
+family=IPv4
+
+# TLS config:
+ca.cert=/etc/taskd/tls/ca.crt.pem
+server.cert=/etc/taskd/tls/server.crt.pem
+server.crl=/etc/taskd/tls/server.crl.pem
+server.key=/etc/taskd/tls/server.key.pem
+}}}

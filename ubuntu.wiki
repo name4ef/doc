@@ -1,0 +1,2 @@
+- check server or desktop version: `dpkg -l ubuntu-desktop`
+- disable service: `update-rc.d tvheadend disable`
