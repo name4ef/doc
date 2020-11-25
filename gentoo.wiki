@@ -379,3 +379,22 @@ emerge -av \
 rc-update add monitorix default
 openrc
 }}}
+
+=== connect trackpad via bluetooth ===
+{{{sh
+emerge -av net-wireless/bluez
+vim /etc/bluetooth/input.conf
+    UserspaceHID=true
+rc-update add bluetooth default
+openrc
+
+bluetoothctl
+    list
+    scan on
+    connect <mac>
+    trust <mac>
+    scan off
+}}}
+----
+- https://wiki.gentoo.org/wiki/Bluetooth/pl
+- https://wiki.gentoo.org/wiki/Bluetooth_input_devices
