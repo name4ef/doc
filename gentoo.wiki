@@ -225,7 +225,7 @@ rm -rf /var/lib/tvheadend
 
 === enable wake on lan ===
 {{{sh
-emerge --ask sys-apps/ethtool
+emerge -av sys-apps/ethtool
 
 # Checking and set current WOL status
 #   d - disable
