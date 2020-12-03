@@ -370,7 +370,7 @@ gst-launch-1.0 filesrc location=video03.mp4 \
 - https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
 
 === monitorix and so on ===
-{{{#sh
+{{{sh
 emerge -av \
     www-misc/monitorix \
     app-admin/hddtemp \
@@ -398,3 +398,13 @@ bluetoothctl
 ----
 - https://wiki.gentoo.org/wiki/Bluetooth/pl
 - https://wiki.gentoo.org/wiki/Bluetooth_input_devices
+
+=== run baical server (AppImage application)===
+{{{sh
+emerge -av sys-fs/fuse:0
+
+DISPLAY=:0 ./BaicalServer.x64.v5.3.1.AppImage
+}}}
+----
+- http://baical.net/index.html
+- https://wiki.gentoo.org/wiki/AppImage
