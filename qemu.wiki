@@ -28,6 +28,17 @@ qemu-system-x86_64 -curses
 ----
  - https://davidyat.es/2016/09/08/gpu-passthrough/
 
+=== setting framebuffer resolution 1920x1080 ===
+{{{sh
+# at guest:
+vim /etc/default/grub
+    GRUB_GFXMODE=1920x1080x32
+    GRUB_GFXPAYLOAD_LINUX=1920x1080
+update-grub2 # for ubuntu
+# at host:
+qemu-system-x86_64 -vga vmware
+}}}
+
 === was helpful for passthrough of usb modem ===
 {{{sh
 /etc/init.d/udev stop
