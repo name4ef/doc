@@ -408,3 +408,13 @@ DISPLAY=:0 ./BaicalServer.x64.v5.3.1.AppImage
 ----
 - http://baical.net/index.html
 - https://wiki.gentoo.org/wiki/AppImage
+
+=== installation and configure of pulseaudio ===
+{{{sh
+vim /etc/portage/make.conf
+    USE="pulseaudio"
+    ACCEPT_LICENSE="NPSL no-source-code linux-fw-redistributable"
+emerge --ask --changed-use --deep --update --newuse @world
+}}}
+----
+- https://wiki.gentoo.org/wiki/PulseAudio
