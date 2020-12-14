@@ -418,3 +418,32 @@ emerge --ask --changed-use --deep --update --newuse @world
 }}}
 ----
 - https://wiki.gentoo.org/wiki/PulseAudio
+
+=== install and configure proprietary nvidia drivers (v455.38) ===
+{{{sh
+eselect kernel list
+eselect kernel set 4 # it was 5.9.11
+genkernel all
+grub-mkconfig -o /boot/grub/grub.cfg
+
+vim /etc/portage/make.conf
+    ACCEPT_LICENSE="NVIDIA-r2"
+emerge -av x11-drivers/nvidia-drivers
+
+vim /etc/X11/xorg.conf.d/nvidia.conf
+    Section "Module"
+        Load "modesetting"
+    EndSection
+    Section "Device"
+        Identifier "nvidia"
+        Driver "nvidia"
+        BusID "1:0:0"
+        Option "AllowEmptyInitialConfiguration"
+    EndSection
+vim /usr/lib64/X11/xdm/Xsetup_0 # go from /etc/X11/xdm/xdm-config
+	xrandr --setprovideroutputsource modesetting NVIDIA-0
+	xrandr --output eDP-1-1 --off
+	xrandr --output HDMI-1-2 --mode 2560x1080
+vim /etc/modprobe.d/blacklist.conf
+    blacklist nouveau
+}}}
