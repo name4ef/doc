@@ -5,6 +5,8 @@ vim /etc/fail2ban/jail.d/sshd.conf
     enabled  = true
 /etc/init.d/fail2ban restart
 fail2ban-client status
+rc-update add fail2ban default
+openrc
 }}}
 ----
 - https://wiki.gentoo.org/wiki/Fail2ban#Configuration
