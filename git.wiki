@@ -3,3 +3,15 @@
 git tag -a v1.0.2 -m "version 1.0.2"
 git push --follow-tags
 }}}
+
+=== edit pushed commit ===
+{{{sh
+git commit --amend
+git push --force origin hotfix
+}}}
+
+=== delete pushed commit ===
+{{{sh
+git reset --hard HEAD^
+git push origin hotfix --force
+}}}
