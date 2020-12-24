@@ -2,7 +2,8 @@
 {{{sh
 vim /etc/fail2ban/jail.d/sshd.conf
     [sshd]
-    enabled  = true
+    enabled = true
+    bantime = 86400
 /etc/init.d/fail2ban restart
 fail2ban-client status
 rc-update add fail2ban default
