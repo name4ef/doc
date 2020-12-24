@@ -455,3 +455,9 @@ emerge -av dev-perl/JSON x11-misc/xdg-utils
 git clone https://github.com/jschlatow/taskopen
 cd taskopen; cp taskopen ~/.bin
 }}}
+
+=== set qutebrowser as default ===
+{{{sh
+ls /usr/share/applications/org.qutebrowser.qutebrowser.desktop
+xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
+}}}
