@@ -447,3 +447,11 @@ vim /usr/lib64/X11/xdm/Xsetup_0 # go from /etc/X11/xdm/xdm-config
 vim /etc/modprobe.d/blacklist.conf
     blacklist nouveau
 }}}
+
+=== taskopen ===
+{{{sh
+emerge -av dev-perl/JSON x11-misc/xdg-utils
+
+git clone https://github.com/jschlatow/taskopen
+cd taskopen; cp taskopen ~/.bin
+}}}
