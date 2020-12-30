@@ -461,3 +461,13 @@ cd taskopen; cp taskopen ~/.bin
 ls /usr/share/applications/org.qutebrowser.qutebrowser.desktop
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 }}}
+
+=== bluetooth headset ===
+{{{sh
+vim /etc/portage/package.use
+    media-sound/pulseaudio native-headset ofono-headset bluetooth dbus
+emerge -av media-sound/pulseaudio
+pulseaudio -k; pulseaudio --start
+}}}
+----
+- https://wiki.gentoo.org/wiki/Bluetooth_headset
