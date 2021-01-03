@@ -54,11 +54,10 @@ emerge-webrsync &&
 emerge --verbose --update --deep --newuse @world &&
 echo "Asia/Tomsk" > /etc/timezone && emerge --config sys-libs/timezone-data &&
 emerge net-misc/ntp && ntpd -q -g &&
-echo "export LANG='en_US.utf8'" >> /etc/profile.env &&
+echo "export LANG='en_US.UTF8'" >> /etc/profile.env &&
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&
 locale-gen &&
 eselect locale list
-# TODO LC_ALL is empty, why?
 }}}
  - eselect locale set 4 # (en_US.utf8)
 {{{sh
