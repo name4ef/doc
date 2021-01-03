@@ -470,3 +470,15 @@ pulseaudio -k; pulseaudio --start
 }}}
 ----
 - https://wiki.gentoo.org/wiki/Bluetooth_headset
+
+=== transmission ===
+{{{sh
+emerge -av transmission tremc
+vim /var/lib/transmission/config/settings.json
+    "rpc-host-whitelist-enabled": false,
+    "rpc-whitelist-enabled": false,
+rc-update add transmission-daemon default
+openrc
+}}}
+----
+- https://addons.mozilla.org/en-US/firefox/addon/transmission-easy-client
