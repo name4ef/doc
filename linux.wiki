@@ -43,3 +43,27 @@ rm /tmp/cdimg1.iso
 }}}
 ----
 - https://wiki.gentoo.org/wiki/CD/DVD/BD_writing
+
+=== resize partition (use with carefully may damage data) ===
+{{{sh
+# reducing the size
+umount /dev/sda3
+e2fsck -f /dev/sda3
+resize2fs /dev/sda3 670G # 670G is new size
+fdisk /dev/sda # remove sda3 and create it with new size: 670G
+e2fsck -f /dev/sda3
+mount /dev/sda3
+
+# increasing the size
+umount /dev/sda4
+e2fsck -f /dev/sda4
+cfdisk /dev/sda
+    # remove sda3, sda4;
+    # create moved to place of start sda2;
+    # create sda4 with new availbse space
+reboot
+e2fsck -f /dev/sda4
+resize2fs /dev/sda4
+e2fsck -f /dev/sda4
+mount /dev/sda4
+}}}
