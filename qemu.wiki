@@ -28,6 +28,22 @@ qemu-system-x86_64 -curses
 ----
  - https://davidyat.es/2016/09/08/gpu-passthrough/
 
+{{{bash
+#!/usr/bin/env bash
+
+export DISK=ubuntu-18.qcow2
+    printf "change vnc password\n%s\n" qemu | qemu-system-x86_64 \
+    -vnc :0,password -monitor stdio \
+    -cpu host -enable-kvm -machine accel=kvm \
+    -smp 4,sockets=1,cores=2,threads=2 \
+    -m 4G \
+    -drive file=$DISK,if=virtio \
+    -net user,hostfwd=tcp::2222-:22 -net nic \
+    -display default,show-cursor=on -vga virtio \
+    -usb -device usb-tablet \
+    -device vfio-pci,host=05:00.0
+}}}
+
 === setting framebuffer resolution 1920x1080 ===
 {{{sh
 # at guest:
