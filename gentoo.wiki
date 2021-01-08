@@ -477,6 +477,9 @@ emerge -av transmission tremc
 vim /var/lib/transmission/config/settings.json
     "rpc-host-whitelist-enabled": false,
     "rpc-whitelist-enabled": false,
+    "download-dir": "/home/efim/myHomeDir/Downloads",
+    "incomplete-dir": "/var/lib/transmission/downloads",
+    "incomplete-dir-enabled": true,
 rc-update add transmission-daemon default
 openrc
 }}}
