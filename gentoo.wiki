@@ -256,7 +256,8 @@ qlist -IC 'x11-base/*' 'x11-drivers/*'
 quse elogind
 }}}
 
-=== remove package ===
+=== packages ===
+==== remove ====
 {{{sh
 emerge --deselect dev-python/six
 emerge -cvp
@@ -264,6 +265,12 @@ emerge -c
 }}}
 ----
 - https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
+==== upgrade ====
+{{{sh
+emerge --update --newuse --deep --ask @world
+}}}
+----
+- https://wiki.gentoo.org/wiki/Upgrading_Gentoo
 
 === qemu ===
 {{{sh
