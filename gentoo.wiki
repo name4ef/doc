@@ -492,3 +492,25 @@ openrc
 }}}
 ----
 - https://addons.mozilla.org/en-US/firefox/addon/transmission-easy-client
+
+=== use second screen over x11vnc ===
+*under work*
+{{{sh
+vim /etc/X11/xorg.conf.d/nvidia.conf
+    Section "Device"
+        Identifier "intelgpu0"
+        Driver     "intel"
+        Option     "VirtualHeads" "2"
+    EndSection
+/etc/init.d/xdm restart
+
+xrandr --newmode "1280x720_60.00" 74.48  1280 1336 1472 1664  720 721 724 746  -HSync +Vsync
+xrandr --addmode VIRTUAL1 "1280x720_60.00"
+xrandr --output VIRTUAL1 --right-of eDP1
+
+x11vnc -forever -bg -geometry 1280x720 -shared -noprimary \
+    -auth /var/lib/xdm/authdir/authfiles/A\:0-CkV3z6 -display :0 \
+    -clip 1280x720+1920+0 -threads -noxdamage
+}}}
+----
+- https://magazine.odroid.com/article/multi-screen-desktop-using-vnc-part-2-an-improved-and-simplified-version/
