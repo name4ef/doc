@@ -1,1 +1,2 @@
 - Build in debug mode: `cmake .. -DCMAKE_BUILD_TYPE=Debug`
+- Set target for install: `cmake .. -DCMAKE_INSTALL_PREFIX=../dist`
