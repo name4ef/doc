@@ -1,0 +1,4 @@
+=== set target vimux panel for run commands ===
+{{{vim
+let g:VimuxRunnerIndex="1:0.1" " 1 - session; 0 - window; 1 - panel
+}}}
