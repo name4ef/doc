@@ -128,3 +128,20 @@ qemu-system-x86_64 \
     -display default,show-cursor=on -vga virtio \
     -usb -device usb-tablet
 }}}
+
+=== fixed: qemu-system-x86_64: Error: HV_ERROR ===
+{{{sh
+cat << EOF > app.entitlements
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>com.apple.security.hypervisor</key>
+    <true/>
+  </dict>
+</plist>
+EOF
+codesign -s - --entitlements app.entitlements --force $(which qemu-system-x86_64)
+}}}
+----
+- https://www.reddit.com/r/qemu_kvm/comments/kdhmuj/qemu_hvf_support_for_mac_os_x_bug_sur_hv_error/
