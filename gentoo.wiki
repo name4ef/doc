@@ -262,6 +262,7 @@ quse elogind
 emerge --deselect dev-python/six
 emerge -cvp
 emerge -c
+# emerge -avC sys-apps/sysvinit # TODO read about -C
 }}}
 ----
 - https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
@@ -514,3 +515,14 @@ x11vnc -forever -bg -geometry 1280x720 -shared -noprimary \
 }}}
 ----
 - https://magazine.odroid.com/article/multi-screen-desktop-using-vnc-part-2-an-improved-and-simplified-version/
+
+=== fixing: Bluetooth: hci0: don't support firmware rome 0x1020200 ===
+{{{sh
+emerge -av sys-firmware/bluez-firmware
+echo "net-wireless/bluez deprecated" >> /etc/portage/package.use
+emerge -av net-wireless/bluez
+hciconfig hci0 up # see: dmesg -Hw
+}}}
+*Bug fixed on kernel since 5.11.2*
+----
+- https://github.com/BrandomRobor/btusb-210681-fix/blob/main/rome_fix.patch
