@@ -11,3 +11,9 @@ openrc
 }}}
 ----
 - https://wiki.gentoo.org/wiki/Fail2ban#Configuration
+
+=== unban ip ===
+{{{sh
+fail2ban-client status sshd
+fail2ban-client unban <ip>
+}}}
