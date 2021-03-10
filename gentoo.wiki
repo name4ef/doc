@@ -526,3 +526,18 @@ hciconfig hci0 up # see: dmesg -Hw
 *Bug fixed on kernel since 5.11.2*
 ----
 - https://github.com/BrandomRobor/btusb-210681-fix/blob/main/rome_fix.patch
+
+=== something like solution for fix trouble when can't play sound through hdmi ===
+{{{sh
+echo "options snd_hda_intel probe_oly=0" >> /etc/modprobe.d/snd.conf
+}}}
+Errors in dmesg continues to be:
+{{{
+[  +0.000020] snd_hda_intel 0000:00:03.0: spurious response 0x0:0x0, last cmd=0x470503
+[  +0.000021] snd_hda_intel 0000:00:03.0: spurious response 0x0:0x0, last cmd=0x570503
+[  +0.000020] snd_hda_intel 0000:00:03.0: spurious response 0x0:0x0, last cmd=0x670503
+[  +0.000021] snd_hda_intel 0000:00:03.0: spurious response 0x0:0x0, last cmd=0x770503
+}}}
+but sound can be play through hdmi output
+----
+- https://github.com/linux-surface/linux-surface/issues/39
