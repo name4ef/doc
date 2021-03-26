@@ -15,3 +15,18 @@ git push --force origin hotfix
 git reset --hard HEAD^
 git push origin hotfix --force
 }}}
+
+=== work with submodules ===
+{{{sh
+# Creating
+git submodule add git@somehost:somelib lib/somelib
+git submodule init
+git submodule set-branch --branch gentoo lib/somelib # if it need
+git add .gitmodules lib/somelib; git commit; git push
+
+# Cloning
+git clone git@somehost:someproject; cd someproject
+git submodule init; git submodule update
+}}}
+----
+- https://chrisjean.com/git-submodules-adding-using-removing-and-updating/
