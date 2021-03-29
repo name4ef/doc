@@ -541,3 +541,9 @@ Errors in dmesg continues to be:
 but sound can be play through hdmi output
 ----
 - https://github.com/linux-surface/linux-surface/issues/39
+
+=== When install Qt via online installer ===
+If install Qt via online installer (qt-unified-linux-x64-4.0.1-1-online.run)
+may has error about *krb* like this:
+*error while loading shared libraries: libgssapi_krb5.so.2: cannot open shared...*
+for fix it need install mit-krb5: `emerge -av app-crypt/mit-krb5`.
