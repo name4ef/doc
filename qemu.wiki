@@ -61,3 +61,5 @@ qemu-system-x86_64 -vga vmware
 echo -n "usb3" > /sys/bus/usb/drivers/usb/unbind
 echo -n "usb3" > /sys/bus/usb/drivers/usb/bind
 }}}
+
+increase disk size: `qemu-img resize windows-10.qcow2 64G`
