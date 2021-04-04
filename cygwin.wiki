@@ -1,6 +1,14 @@
-=== how to install sshd as system service ===
+=== sshd as system service ===
 {{{sh
 ssh-host-config # and follow by wizard
 # run sshd service via services.msc # TODO change it to control services from cygwin stuff
 # go to windows firewall and open ssh port # TODO do this action through netsh or some like this
+}}}
+
+=== set default shell ===
+{{{sh
+mkpasswd > /etc/passwd
+vim /etc/passwd
+    ""change shell for needed user
+# relogin to cygwin
 }}}
