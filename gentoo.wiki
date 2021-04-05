@@ -164,8 +164,11 @@ emerge -C net-misc/iputils
 emerge net-misc/iputils
 }}}
 
-=== write iso image of Windows to usb flash ===
-`woeusb --device Win10_1909_Russian_x64.iso /dev/sdc`
+=== write iso image of windows distribution to usb flash ===
+{{{sh
+emerge -av woeusb
+woeusb --device Win10_1909_Russian_x64.iso --target-filesystem NTFS /dev/sdc
+}}}
 
 === set hostname ===
 {{{sh
