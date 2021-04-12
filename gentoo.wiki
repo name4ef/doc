@@ -472,6 +472,21 @@ ls /usr/share/applications/org.qutebrowser.qutebrowser.desktop
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 }}}
 
+=== set mupdf for pdf & djviewer for djvu ===
+{{{sh
+emerge -av mupdf app-text/djview
+
+file --mime some.pdf # get name of mimetype for pdf: applications/pdf
+file --mime some.djvu # get name of mimetype for djvu: image/vnd.djvu
+xdg-mime query default application/pdf # get current value: calibre-ebook-viewer.desktop
+xdg-mime query default image/vnd.djvu # get current value: calibre-ebook-viewer.desktop
+ls /usr/share/applications/mupdf.desktop
+ls /usr/share/applications/djvulibre-djview4.desktop
+xdg-mime default mupdf.desktop "application/pdf"
+xdg-mime default djvulibre-djview4.desktop "image/vnd.djvu"
+xdg-mime default djvulibre-djview4.desktop "image/vnd.djvu+multipage"
+}}}
+
 === bluetooth headset ===
 {{{sh
 vim /etc/portage/package.use
