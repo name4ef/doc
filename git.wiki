@@ -30,3 +30,15 @@ git submodule init; git submodule update
 }}}
 ----
 - https://chrisjean.com/git-submodules-adding-using-removing-and-updating/
+
+=== edit commit (with author) ===
+{{{sh
+git checkout 03f482d6
+git commit --amend --author "New Author Name <New Author Email>"
+# now we have a new commit with hash assumed to be 42627abe
+git checkout master # checkout the original branch
+git replace 03f482d6 42627abe
+git filter-branch -- --all # rewrite all future commits based on the replacement
+git replace -d 03f482d6 # remove the replacement for cleanliness
+git push --force-with-lease
+}}}
