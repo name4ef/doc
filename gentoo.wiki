@@ -565,3 +565,17 @@ If install Qt via online installer (qt-unified-linux-x64-4.0.1-1-online.run)
 may has error about *krb* like this:
 *error while loading shared libraries: libgssapi_krb5.so.2: cannot open shared...*
 for fix it need install mit-krb5: `emerge -av app-crypt/mit-krb5`.
+
+=== configure of pptp client ===
+{{{sh
+emerge -av net-dialup/pptpclient
+pptpsetup \
+    --create "<tunnelname>" \
+    --server "<hostname>" \
+    --username "<username>" \
+    --password "<password>"
+pppd call "<tunnelname>"
+route add -net 192.168.70.0/24 gw 192.168.70.1 
+
+killall pppd # for disconnect
+}}}
