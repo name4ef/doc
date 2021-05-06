@@ -1,0 +1,5 @@
+-E  stop compilation after end of macro processing stage (make be useful for
+    debug of macros)
+-D  set macro symbol from command line (for example: `-DDEBUG=2`, is some like:
+    `#defile DEBUG 2`)
+-MM analysed of source files and give information about interdependence
