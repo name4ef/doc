@@ -587,7 +587,7 @@ emerge -av \
     app-emulation/docker-compose \
     app-emulation/docker-machine
 emerge -av app-emulation/virtualbox
-usermod -G vboxusers <username>
+gpasswd -a <user> vboxusers
 modprobe vboxdrv vboxnetadp vboxnetflt
 docker-machine create default
 eval $(docker-machine env default)
