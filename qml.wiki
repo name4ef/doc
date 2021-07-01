@@ -1,0 +1,7 @@
+=== libpng warning: iCCP: known incorrect sRGB profile ===
+{{{sh
+cd src/images
+mogrify *.png # from ImageMagick
+}}}
+----
+- https://stackoverflow.com/questions/22745076/libpng-warning-iccp-known-incorrect-srgb-profile
