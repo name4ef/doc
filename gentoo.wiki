@@ -622,3 +622,12 @@ volumes:
 EOF
 docker-compose up
 }}}
+
+=== nvtop ===
+{{{sh
+emerge -av app-portage/layman
+layman-updater -R
+layman -a guru
+emerge -av nvtop
+nvtop
+}}}
