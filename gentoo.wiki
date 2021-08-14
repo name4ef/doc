@@ -4,7 +4,7 @@ https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-inst
 {{{sh
 wpa_passphrase <SSID> >> /etc/wpa_supplicant.conf
 wpa_supplicant -D wext -i wlp1s0 -c /etc/wpa_supplicant.conf -B
-ntpd -q -g
+ntpd -q -g # TODO test with ntp-client only
 /etc/init.d/sshd start
 passwd # set password for root
 }}}
@@ -39,7 +39,6 @@ links https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/curren
 grep $(openssl dgst -r -sha512 stage3-amd64-*.tar.xz) *.asc &&
 tar xpf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner &&
 cat << EOF >> etc/portage/make.conf &&
-MAKEOPTS="-j5"
 GENTOO_MIRRORS="http://mirror.yandex.ru/gentoo-distfiles/" # mirrorselect -i -o >> etc/portage/make.conf
 EOF
 mkdir etc/portage/repos.conf &&
@@ -53,7 +52,7 @@ source /etc/profile && export PS1="(chroot) ${PS1}" &&
 emerge-webrsync &&
 emerge --verbose --update --deep --newuse @world &&
 echo "Asia/Tomsk" > /etc/timezone && emerge --config sys-libs/timezone-data &&
-emerge net-misc/ntp && ntpd -q -g &&
+emerge net-misc/ntp && ntpd -q -g && # TODO test with ntp-client only
 echo "export LANG='en_US.UTF8'" >> /etc/profile.env &&
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&
 locale-gen &&
@@ -69,14 +68,14 @@ emerge \
     app-editors/vim dev-util/ctags app-misc/task dev-python/six dev-python/pip \
     app-misc/tmux app-text/tree sys-process/htop dev-vcs/git &&
 genkernel all &&
-cat << EOF >> /etc/fstab &&
+cat << EOF >> /etc/fstab
 $_EFI /boot/efi vfat noauto  0 1
 $_SWAP none      swap sw      0 0
 $_ROOT /         ext4 noatime 0 1
 EOF
 rc-update add sysklogd default &&
 rc-update add sshd default &&
-rc-update add ntpd &&
+rc-update add ntpd && # TODO test with ntp-client only
 echo -e "\nPlease set root password:" &&
 passwd
 }}}
@@ -299,7 +298,10 @@ lscpu | grep -E "vmx|svm" # VT-x or AMD-V must be supported by the processor
 # Go into BIOS (EFI) settings and turn on VT-d and IOMMU support
 # Note: Some EFI doesn't have IOMMU configuration settings
 vim /etc/default/grub
+    # Intel (ex. TODO)
     GRUB_CMDLINE_LINUX="iommu=pt intel_iommu=on pcie_acs_override=downstream,multifunction"
+    # AMD (ex. AMD Ryzen 5 3400G with Radeon Vega Graphics)
+    GRUB_CMDLINE_LINUX="iommu=pt amd_iommu=on pcie_acs_override=downstream,multifunction"
 grub-mkconfig -o /boot/grub/grub.cfg
 reboot
 
@@ -308,14 +310,14 @@ for d in /sys/kernel/iommu_groups/*/devices/*; do
     n=${d#*/iommu_groups/*}; n=${n%%/*}
     printf 'IOMMU Group %s ' "$n"
     lspci -nns "${d##*/}"
-done # In IOMMU group 13 wireless networking controller only - it's fine
+done # In IOMMU group 13 wireless networking controller only - it's fine; or apply ACS patch
 lspci -nn | grep Wireless
     03:00.0 Network controller [0280]: Qualcomm Atheros AR9485 Wireless Network Adapter [168c:0032] (rev 01)
 vim /etc/modprobe.d/vfio.conf
     options vfio-pci ids=168c:0032
 reboot
 
-echo 0000:03:00.0 > /sys/bus/pci/devices/0000\:03\:00.0/driver/unbind
+echo '0000:03:00.0' > /sys/bus/pci/devices/0000\:03\:00.0/driver/unbind
 modprobe vfio-pci
 
 export DISK=ubuntu-18.qcow2
@@ -333,6 +335,13 @@ qemu-system-x86_64 \
 - https://wiki.gentoo.org/wiki/GPU_passthrough_with_libvirt_qemu_kvm
 - https://davidyat.es/2016/09/08/gpu-passthrough/
 - https://www.kernel.org/doc/Documentation/vfio.txt
+- https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Ensuring_that_the_groups_are_valid
+===== applying ACS patch =====
+{{{sh
+git clone https://github.com/feniksa/gentoo_ACS_override_patch.git /etc/portage/patches
+emerge -av gentoo-sources
+genkernel kernel
+}}}
 === boot trought uefi ===
 {{{sh
 emerge sys-firmware/edk2-ovmf
@@ -534,6 +543,11 @@ x11vnc -forever -bg -geometry 1280x720 -shared -noprimary \
 ----
 - https://magazine.odroid.com/article/multi-screen-desktop-using-vnc-part-2-an-improved-and-simplified-version/
 
+=== one of solution for rebuild kernel ===
+{{{sh
+genkernel --menuconfig --no-clian all
+}}}
+
 === fixing: Bluetooth: hci0: don't support firmware rome 0x1020200 ===
 {{{sh
 emerge -av sys-firmware/bluez-firmware
@@ -544,6 +558,15 @@ hciconfig hci0 up # see: dmesg -Hw
 *Bug fixed on kernel since 5.11.2*
 ----
 - https://github.com/BrandomRobor/btusb-210681-fix/blob/main/rome_fix.patch
+
+=== no title (misc) ===
+{{{sh
+x11vnc -display :1 -passwd "123" -forever -shared -geometry 1280x800 \
+    -noprimary -noshm
+Xephyr :1 -screen 1280x800
+ffmpeg -f x11grab -s 1920x1080 -framerate 30 -i :0.0+2560 -preset fast \
+    -tune zerolatency -b 900k -f mpegts udp://192.168.0.128:9000
+}}}
 
 === something like solution for fix trouble when can't play sound through hdmi ===
 {{{sh
@@ -559,6 +582,14 @@ Errors in dmesg continues to be:
 but sound can be play through hdmi output
 ----
 - https://github.com/linux-surface/linux-surface/issues/39
+
+=== prosody ===
+{{{sh
+emerge -av net-im/prosody
+vim /etc/jabber/prosody.cfg.lua
+}}}
+----
+- https://prosody.im/doc/configure
 
 === When install Qt via online installer ===
 If install Qt via online installer (qt-unified-linux-x64-4.0.1-1-online.run)
