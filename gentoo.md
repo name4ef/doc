@@ -1,5 +1,5 @@
 ### install amd64
-https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-install-amd64-minimal/install-amd64-minimal-<somedate>.iso
+https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-install-amd64-minimal/
 #### up network and run sshd
 ```sh
 wpa_passphrase <SSID> >> /etc/wpa_supplicant.conf
@@ -259,7 +259,7 @@ quse elogind
 ```
 
 ### packages 
-#### remove =
+#### remove
 ```sh
 emerge --deselect dev-python/six
 emerge -cvp
@@ -268,7 +268,7 @@ emerge -c
 ```
 ----
 - https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
-#### upgrade =
+#### upgrade
 ```sh
 emerge --update --newuse --deep --ask @world
 ```
