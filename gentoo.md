@@ -66,7 +66,7 @@ emerge \
     sys-kernel/gentoo-sources sys-kernel/genkernel sys-kernel/linux-firmware \
     app-admin/sysklogd sys-fs/e2fsprogs net-misc/dhcpcd sys-apps/ethtool \
     app-editors/vim dev-util/ctags app-misc/task dev-python/six dev-python/pip \
-    app-misc/tmux app-text/tree sys-process/htop dev-vcs/git &&
+    app-misc/tmux app-text/tree sys-process/htop dev-vcs/git media-fonts/hack &&
 genkernel all &&
 cat << EOF >> /etc/fstab
 $_EFI /boot/efi vfat noauto  0 1
