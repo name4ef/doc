@@ -1,3 +1,4 @@
+```
 CC          command for call of C compiler
 CFLAGS      parameters for C compiler
 CXX         command for call of C++ compiler
@@ -11,8 +12,11 @@ $@  name of current target
 $<  name of first target from list of dependencies
 $^  all list of dependencies
 
-=== Example ===
-{{{make
+-   ignore errors
+```
+
+#### Example
+``` make
 SRCMODULES = mod1.c mod2.c
 OBJMODULES = $(SRCMODULES:.c=.o)
 CFLAGS = -g -Wall -ansi -pedantic
@@ -32,4 +36,4 @@ deps.mk: $(SRCMODULES)
     
 clean:
     rm -f *.o prog
-}}}
+```
