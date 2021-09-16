@@ -3,8 +3,7 @@ CC          command for call of C compiler
 CFLAGS      parameters for C compiler
 CXX         command for call of C++ compiler
 CXXFLAGS    parameters for C++ compiler
-CPPFLAGS    parameters for preprocessor (place for define of
-macrovariables)
+CPPFLAGS    parameters for preprocessor (place for define of macrovariables)
 LD          command for call of system linker
 MAKE        command for call of make utile with all parameters
 
