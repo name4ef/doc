@@ -662,3 +662,27 @@ layman -a guru
 emerge -av nvtop
 nvtop
 ```
+
+connect to termux sshd over usb cabel
+-------------------------------------
+``` sh
+emerge -av dev-util/android-tools
+
+# at phone:
+# 1. go to Settings > About device
+# 2. tap the Build number 7 times to make developer options available
+# 3. go to Settings > System > Developer Options
+# 4. now hit Enable USB-Debugging
+
+adb devices # list of attached devices
+adb forward tcp:6100 tcp:7100 # forware local port 6100 to port 7100 of phone
+
+# run in termux
+whoami # get username for connet
+passwd # and set password for this user
+sshd -p 7100
+
+ssh u0_a166@localhost -p 6100 # now may connect to sshd of termux
+```
+----
+- https://wiki.gentoo.org/wiki/Android/adb
