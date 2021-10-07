@@ -1,4 +1,5 @@
-### install amd64
+install amd64
+=============
 https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-install-amd64-minimal/
 #### up network and run sshd
 ```sh
@@ -133,7 +134,8 @@ reboot
  - https://www.gentoo.org/get-started/
  - https://wiki.gentoo.org/wiki/Handbook:AMD64
 
-### distcc for emerge 
+distcc for emerge 
+-----------------
  1. ssh root@calculate
      1. emerge --ask sys-devel/distcc
      2. vim /etc/conf.d/distccd
@@ -157,25 +159,29 @@ reboot
 ----
  - https://wiki.gentoo.org/wiki/Distcc
 
-### can't ping under regular user (ping: socket: Operation not permitted) 
+can't ping under regular user (ping: socket: Operation not permitted) 
+---------------------------------------------------------------------
 ```sh
 emerge -C net-misc/iputils
 emerge net-misc/iputils
 ```
 
-### write iso image of windows distribution to usb flash 
+write iso image of windows distribution to usb flash 
+----------------------------------------------------
 ```sh
 emerge -av woeusb
 woeusb --device Win10_1909_Russian_x64.iso --target-filesystem NTFS /dev/sdc
 ```
 
-### set hostname 
+set hostname 
+------------
 ```sh
 vim /etc/{conf.d/hostname,hosts}
 hostname <hostname>
 ```
 
-### usage only needed network interface (ex. wired only) 
+usage only needed network interface (ex. wired only) 
+----------------------------------------------------
 ```sh
 vim /etc/conf.d/net
     config_enp2s0="dhcp"
@@ -184,7 +190,8 @@ ln -s net.lo net.enp2s0
 rc-update add net.enp2s0 default
 ```
 
-### making bootable gentoo LiveUSB 
+making bootable gentoo LiveUSB 
+------------------------------
 ```sh
 emerge --ask sys-fs/dosfstools sys-boot/syslinux
 cfdisk /dev/sdb
@@ -211,12 +218,14 @@ syslinux /dev/sdb1 # install the syslinux bootloader on the USB drive
 ----
 - https://wiki.gentoo.org/wiki/LiveUSB/Guide
 
-### masked by: ~amd64 keyword 
+masked by: ~amd64 keyword 
+-------------------------
 ```sh
 echo 'ACCEPT_KEYWORDS="~amd64"' >> /etc/portage/make.conf
 ```
 
-### reset tvheadend password 
+reset tvheadend password 
+------------------------
 *Will be reset all settings besides password*
 ```sh
 /etc/init.d/tvheadend stop
@@ -224,7 +233,8 @@ rm -rf /var/lib/tvheadend
 /etc/init.d/tvheadend start
 ```
 
-### enable wake on lan 
+enable wake on lan 
+------------------
 ```sh
 emerge -av sys-apps/ethtool
 
@@ -246,19 +256,19 @@ openrc
 - https://wiki.gentoo.org/wiki/Power_management/Ethernet
 - https://wiki.gentoo.org/wiki/Handbook:X86/Networking/Introduction
 
-### install xserver and dwm and so on
+install xserver and dwm and so on
+---------------------------------
 ```sh
 echo 'USE="consolekit -elogind -systemd"' >> /etc/portage/make.conf
 emerge -a xorg-server xdm dwm dmenu x11-terms/st x11-apps/setxkbmap
-```
 
-```sh
 emerge --ask --verbose --depclean x11-wm/dwm
 qlist -IC 'x11-base/*' 'x11-drivers/*'
 quse elogind
 ```
 
-### packages 
+packages 
+--------
 #### remove
 ```sh
 emerge --deselect dev-python/six
@@ -275,7 +285,8 @@ emerge --update --newuse --deep --ask @world
 ----
 - https://wiki.gentoo.org/wiki/Upgrading_Gentoo
 
-### qemu 
+qemu 
+====
 ```sh
 echo "app-emulation/qemu usb" >> /etc/portage/package.use
 emerge -a app-emulation/qemu sys-apps/usbutils
@@ -342,25 +353,27 @@ git clone https://github.com/feniksa/gentoo_ACS_override_patch.git /etc/portage/
 emerge -av gentoo-sources
 genkernel kernel
 ```
-### boot trought uefi 
+#### boot trought uefi 
 ```sh
 emerge sys-firmware/edk2-ovmf
 qemu-system-x86_64 \
     -bios /usr/share/edk2-ovmf/OVMF_CODE.fd \
     -cdrom /usr/share/edk2-ovmf/UefiShell.iso
 ```
-### set framebuffer resolution (1920x1080) 
+#### set framebuffer resolution (1920x1080) 
 ```sh
 emerge -a x11-drivers/xf86-video-qxl
 ```
 
-### grub automaticly detect other OS 
+grub automaticly detect other OS 
+--------------------------------
 ```sh
 emerge --ask --newuse sys-boot/os-prober
 grub-mkconfig -o /tmp/grub.cfg # place for grub config
 ```
 
-### show file of package 
+show file of package 
+--------------------
 ```sh
 emerge app-portage/gentoolkit
 equery files --tree sys-firmware/edk2-ovmf
@@ -368,7 +381,8 @@ equery files --tree sys-firmware/edk2-ovmf
 ----
 - https://wiki.gentoo.org/wiki/Equery
 
-### play file through gst-launch to fbdev 
+play file through gst-launch to fbdev 
+-------------------------------------
 ```sh
 emerge \
     media-libs/gstreamer \
@@ -388,7 +402,8 @@ gst-launch-1.0 filesrc location=video03.mp4 \
 - https://lists.archive.carbon60.com/gentoo/user/166724
 - https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
 
-### monitorix and so on 
+monitorix and so on 
+-------------------
 ```sh
 emerge -av \
     www-misc/monitorix \
@@ -399,7 +414,8 @@ rc-update add monitorix default
 openrc
 ```
 
-### connect trackpad via bluetooth 
+connect trackpad via bluetooth 
+------------------------------
 ```sh
 emerge -av net-wireless/bluez
 vim /etc/bluetooth/input.conf
@@ -418,7 +434,8 @@ bluetoothctl
 - https://wiki.gentoo.org/wiki/Bluetooth/pl
 - https://wiki.gentoo.org/wiki/Bluetooth_input_devices
 
-### run baical server (AppImage application)
+run baical server (AppImage application)
+----------------------------------------
 ```sh
 emerge -av sys-fs/fuse:0
 
@@ -428,7 +445,8 @@ DISPLAY=:0 ./BaicalServer.x64.v5.3.1.AppImage
 - http://baical.net/index.html
 - https://wiki.gentoo.org/wiki/AppImage
 
-### installation and configure of pulseaudio 
+installation and configure of pulseaudio 
+----------------------------------------
 ```sh
 vim /etc/portage/make.conf
     USE="pulseaudio"
@@ -438,7 +456,8 @@ emerge --ask --changed-use --deep --update --newuse @world
 ----
 - https://wiki.gentoo.org/wiki/PulseAudio
 
-### install and configure proprietary nvidia drivers (v455.38) 
+install and configure proprietary nvidia drivers (v455.38) 
+----------------------------------------------------------
 ```sh
 eselect kernel list
 eselect kernel set 4 # it was 5.9.11
@@ -467,7 +486,8 @@ vim /etc/modprobe.d/blacklist.conf
     blacklist nouveau
 ```
 
-### taskopen 
+taskopen 
+--------
 ```sh
 emerge -av dev-perl/JSON x11-misc/xdg-utils
 
@@ -475,13 +495,15 @@ git clone https://github.com/jschlatow/taskopen
 cd taskopen; cp taskopen ~/.bin
 ```
 
-### set qutebrowser as default 
+set qutebrowser as default 
+--------------------------
 ```sh
 ls /usr/share/applications/org.qutebrowser.qutebrowser.desktop
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 ```
 
-### set mupdf for pdf & djviewer for djvu 
+set mupdf for pdf & djviewer for djvu 
+-------------------------------------
 ```sh
 emerge -av mupdf app-text/djview
 
@@ -496,7 +518,8 @@ xdg-mime default djvulibre-djview4.desktop "image/vnd.djvu"
 xdg-mime default djvulibre-djview4.desktop "image/vnd.djvu+multipage"
 ```
 
-### bluetooth headset 
+bluetooth headset 
+-----------------
 ```sh
 vim /etc/portage/package.use
     media-sound/pulseaudio native-headset ofono-headset bluetooth dbus
@@ -506,7 +529,8 @@ pulseaudio -k; pulseaudio --start
 ----
 - https://wiki.gentoo.org/wiki/Bluetooth_headset
 
-### transmission 
+transmission 
+------------
 ```sh
 emerge -av transmission tremc
 vim /var/lib/transmission/config/settings.json
@@ -521,7 +545,8 @@ openrc
 ----
 - https://addons.mozilla.org/en-US/firefox/addon/transmission-easy-client
 
-### use second screen over x11vnc 
+use second screen over x11vnc 
+-----------------------------
 *under work*
 ```sh
 vim /etc/X11/xorg.conf.d/nvidia.conf
@@ -543,12 +568,14 @@ x11vnc -forever -bg -geometry 1280x720 -shared -noprimary \
 ----
 - https://magazine.odroid.com/article/multi-screen-desktop-using-vnc-part-2-an-improved-and-simplified-version/
 
-### one of solution for rebuild kernel 
+one of solution for rebuild kernel 
+----------------------------------
 ```sh
 genkernel --menuconfig --no-clean all
 ```
 
-### fixing: Bluetooth: hci0: don't support firmware rome 0x1020200 
+fixing: Bluetooth: hci0: don't support firmware rome 0x1020200 
+--------------------------------------------------------------
 ```sh
 emerge -av sys-firmware/bluez-firmware
 echo "net-wireless/bluez deprecated" >> /etc/portage/package.use
@@ -559,16 +586,8 @@ hciconfig hci0 up # see: dmesg -Hw
 ----
 - https://github.com/BrandomRobor/btusb-210681-fix/blob/main/rome_fix.patch
 
-### no title (misc) 
-```sh
-x11vnc -display :1 -passwd "123" -forever -shared -geometry 1280x800 \
-    -noprimary -noshm
-Xephyr :1 -screen 1280x800
-ffmpeg -f x11grab -s 1920x1080 -framerate 30 -i :0.0+2560 -preset fast \
-    -tune zerolatency -b 900k -f mpegts udp://192.168.0.128:9000
-```
-
-### something like solution for fix trouble when can't play sound through hdmi 
+something like solution for fix trouble when can't play sound through hdmi 
+--------------------------------------------------------------------------
 ```sh
 echo "options snd_hda_intel probe_oly=0" >> /etc/modprobe.d/snd.conf
 ```
@@ -583,7 +602,9 @@ but sound can be play through hdmi output
 ----
 - https://github.com/linux-surface/linux-surface/issues/39
 
-### prosody 
+prosody 
+-------
+*under work*
 ```sh
 emerge -av net-im/prosody
 vim /etc/jabber/prosody.cfg.lua
@@ -591,13 +612,15 @@ vim /etc/jabber/prosody.cfg.lua
 ----
 - https://prosody.im/doc/configure
 
-### When install Qt via online installer 
+When install Qt via online installer 
+------------------------------------
 If install Qt via online installer (qt-unified-linux-x64-4.0.1-1-online.run)
 may has error about *krb* like this:
 *error while loading shared libraries: libgssapi_krb5.so.2: cannot open shared...*
 for fix it need install mit-krb5: `emerge -av app-crypt/mit-krb5`.
 
-### configure of pptp client 
+configure of pptp client 
+------------------------
 ```sh
 emerge -av net-dialup/pptpclient
 pptpsetup \
@@ -611,7 +634,8 @@ route add -net 192.168.70.0/24 gw 192.168.70.1
 killall pppd # for disconnect
 ```
 
-### docker 
+docker 
+------
 ```sh
 emerge -av \
     app-emulation/docker \
@@ -654,7 +678,8 @@ EOF
 docker-compose up
 ```
 
-### nvtop 
+nvtop 
+-----
 ```sh
 emerge -av app-portage/layman
 layman-updater -R
@@ -665,7 +690,7 @@ nvtop
 
 connect to termux sshd over usb cabel
 -------------------------------------
-``` sh
+```sh
 emerge -av dev-util/android-tools
 
 # at phone:
