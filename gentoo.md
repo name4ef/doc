@@ -364,6 +364,26 @@ qemu-system-x86_64 \
 ```sh
 emerge -a x11-drivers/xf86-video-qxl
 ```
+#### Unbind VTconsoles
+```sh
+echo 0 > /sys/class/vtconsole/vtcon0/bind
+echo 0 > /sys/class/vtconsole/vtcon1/bind
+```
+#### Dumping rom
+```sh
+echo '0000:05:00.0' > /sys/bus/pci/drivers/vfio-pci/unbind
+echo 1 > /sys/bus/pci/devices/0000\:05\:00.0/rom 
+cat /sys/bus/pci/devices/0000\:05\:00.0/rom > vega.bin
+echo 0 > /sys/bus/pci/devices/0000\:05\:00.0/rom 
+echo '0000:05:00.0' > /sys/bus/pci/drivers/vfio-pci/bind
+```
+#### use cifs for share directory
+```sh
+emerge -av net-fs/samba
+qemu-system-x86_64 \
+    -device e1000,netdev=net0 -netdev user,id=net0,smb=/home/user1/soft \
+# \\10.0.2.4\qemu
+```
 
 grub automaticly detect other OS 
 --------------------------------
