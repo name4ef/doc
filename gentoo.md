@@ -731,3 +731,16 @@ ssh u0_a166@localhost -p 6100 # now may connect to sshd of termux
 ```
 ----
 - https://wiki.gentoo.org/wiki/Android/adb
+
+ccache
+------
+``` sh
+emerge -av dev-util/ccache
+vim /etc/portage/make.conf
+	FEATURES="ccache"
+	CCACHE_DIR="/var/cache/ccache"
+vim ~/.zshrc
+	export PATH="/usr/lib/ccache/bin${PATH:+:}${PATH}"
+	export CCACHE_DIR="/var/cache/ccache"
+ccache -s # show statistics
+```
