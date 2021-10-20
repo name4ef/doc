@@ -185,10 +185,14 @@ usage only needed network interface (ex. wired only)
 ```sh
 vim /etc/conf.d/net
     config_enp2s0="dhcp"
+    # or for static:
+    #config_enp37s0="10.0.0.109 netmask 255.255.255.0 brd 192.168.0.255"
+    #routes_enp37s0="default via 10.0.0.1"
 cd /etc/init.d
 ln -s net.lo net.enp2s0
 rc-update add net.enp2s0 default
 ```
+[1]: https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/System#Automatically_start_networking_at_boot
 
 making bootable gentoo LiveUSB 
 ------------------------------
