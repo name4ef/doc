@@ -1,5 +1,6 @@
 - check server or desktop version: `dpkg -l ubuntu-desktop`
 - disable service: `update-rc.d tvheadend disable`
+- install pip: `apt install python3-pip`
 
 === seting mirror ===
 {{{sh
