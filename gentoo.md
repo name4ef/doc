@@ -64,10 +64,25 @@ eselect locale list
 env-update && source /etc/profile && export PS1="(chroot) ${PS1}" &&
 echo "sys-kernel/linux-firmware linux-fw-redistributable no-source-code" >> /etc/portage/package.license &&
 emerge \
-    sys-kernel/gentoo-sources sys-kernel/genkernel sys-kernel/linux-firmware \
-    app-admin/sysklogd sys-fs/e2fsprogs net-misc/dhcpcd sys-apps/ethtool \
-    app-editors/vim dev-util/ctags app-misc/task dev-python/six dev-python/pip \
-    app-misc/tmux app-text/tree sys-process/htop dev-vcs/git media-fonts/hack &&
+    sys-kernel/gentoo-sources \
+    sys-kernel/genkernel \
+    sys-kernel/linux-firmware \
+    app-admin/sysklogd \
+    sys-fs/e2fsprogs \
+    net-misc/dhcpcd \
+    sys-apps/ethtool \
+    app-editors/vim \
+    dev-util/ctags \
+    app-misc/task \
+    app-misc/tmux \
+    dev-python/six \
+    dev-python/pip \
+    app-text/tree \
+    sys-process/htop \
+    dev-vcs/git \
+    media-fonts/hack \
+    app-shells/gentoo-zsh-completions \
+    &&
 genkernel all &&
 cat << EOF >> /etc/fstab
 $_EFI /boot/efi vfat noauto  0 1
