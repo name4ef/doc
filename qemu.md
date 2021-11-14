@@ -1,6 +1,7 @@
-=== passthrough ===
+passthrough
+-----------
  - ubuntu-18
-{{{sh
+```sh
 sudo apt-get update
 sudo apt-get install qemu-kvm seabios qemu-utils hugepages ovmf
 kvm-ok
@@ -24,11 +25,10 @@ lsmod |grep kvm
 # creating the vm
 dd if=/dev/zero of=ubuntu20.img bs=1M seek=24000 count=0
 qemu-system-x86_64 -curses
-}}}
-----
- - https://davidyat.es/2016/09/08/gpu-passthrough/
+```
+[1]: https://davidyat.es/2016/09/08/gpu-passthrough/
 
-{{{bash
+```bash
 #!/usr/bin/env bash
 
 export DISK=ubuntu-18.qcow2
@@ -42,24 +42,28 @@ export DISK=ubuntu-18.qcow2
     -display default,show-cursor=on -vga virtio \
     -usb -device usb-tablet \
     -device vfio-pci,host=05:00.0
-}}}
+```
 
-=== setting framebuffer resolution 1920x1080 ===
-{{{sh
+setting framebuffer resolution 1920x1080
+----------------------------------------
+```sh
 # at guest:
 vim /etc/default/grub
     GRUB_GFXMODE=1920x1080x32
-    GRUB_GFXPAYLOAD_LINUX=1920x1080
+    GRUB_GFXPAYLOAD_LINUX=1920x1080x32
 update-grub2 # for ubuntu
 # at host:
 qemu-system-x86_64 -vga vmware
-}}}
+# NOTE: with `-device qxl-vga,vgamem_mb=128` this method does not work
+#       and resolution of fb0 is 1024x768 always
+```
 
-=== was helpful for passthrough of usb modem ===
-{{{sh
+was helpful for passthrough of usb modem
+----------------------------------------
+```sh
 /etc/init.d/udev stop
 echo -n "usb3" > /sys/bus/usb/drivers/usb/unbind
 echo -n "usb3" > /sys/bus/usb/drivers/usb/bind
-}}}
+```
 
 increase disk size: `qemu-img resize windows-10.qcow2 64G`
