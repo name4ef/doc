@@ -14,7 +14,7 @@ vim + taskwiki
 brew install vim
 export PATH=$PATH:/usr/local/bin/ # add to .~/.zshrc
 ```
-# fix: "ModuleNotFoundError: No module named 'six'"
+### fix: "ModuleNotFoundError: No module named 'six'"
 ```sh
 pip3 install six tasklib # pip3.9 may be helpfull
 ```
