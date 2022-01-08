@@ -10,6 +10,9 @@ chmod +x ~/.task/hooks/on-modify.timewarrior
 
 vim + taskwiki
 --------------
+## vim + taskwiki
+### vim + taskwiki
+# vim + taskwiki
 ```sh
 brew install vim
 export PATH=$PATH:/usr/local/bin/ # add to .~/.zshrc
