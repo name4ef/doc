@@ -299,7 +299,8 @@ emerge -c
 - https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
 #### upgrade
 ```sh
-emerge --update --newuse --deep --ask @world
+emerge --ask --update --deep --newuse @world
+emerge --ask --depclean
 ```
 ----
 - https://wiki.gentoo.org/wiki/Upgrading_Gentoo
