@@ -764,3 +764,13 @@ vim ~/.zshrc
 	export CCACHE_DIR="/var/cache/ccache"
 ccache -s # show statistics
 ```
+
+### ranger with support of view images in alacritty
+```sh
+emerge -av media-gfx/ueberzug
+cat << EOF >> $HOME/.config/ranger/rc.conf
+set preview_images true
+set preview_images_method ueberzug
+EOF
+```
+[1]: https://github.com/ranger/ranger/wiki/Image-Previews
