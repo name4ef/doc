@@ -1,9 +1,9 @@
-=== nvidia optimus ===
-==== solution for work nvidia only ====
+### nvidia optimus
+#### solution for work nvidia only
  1. install nvidia driver
  2. get PCI address of nvidia card: `lspci|grep -E "VGA|3D"` (01:00.0 is 1:0:0)
  3. add to /etc/X11/xorg.conf:
-{{{conf
+```conf
 Section "Module"
     Load "modesetting"
 EndSection
@@ -14,25 +14,24 @@ Section "Device"
     BusID "<pci address here>"
     Option "AllowEmptyInitialConfiguration"
 EndSection
-}}}
+```
  4. add to ~/.xinitrc:
-{{{sh
+```sh
 xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --auto
-}}}
-===== for kdm =====
+```
+##### for kdm
 add to /etc/kde/kdm/Xsetup:
-{{{sh
+```sh
 xrandr --setprovideroutputsource modesetting NVIDIA-0
 xrandr --auto
 xrandr --dpi 96
-}}}
+```
 and `killall kdm` to /etc/kde/kdm/Xreset:
-----
- - https://wiki.archlinux.org/index.php/NVIDIA_Optimus_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)
+[1]: https://wiki.archlinux.org/index.php/NVIDIA_Optimus_(%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9)
 
-=== write dirrectory to DVD ===
-{{{sh
+### write dirrectory to DVD
+```sh
 emerge --ask app-cdr/cdrtools # for gentoo
 mkisofs -o some.iso some/
 cdrecord dev=/dev/cdrom some.iso
@@ -40,12 +39,11 @@ cdrecord dev=/dev/cdrom some.iso
 dd if=/dev/cdrom of=/tmp/cdimg1.iso
 md5sum /tmp/cdimg1.iso some.iso
 rm /tmp/cdimg1.iso
-}}}
-----
-- https://wiki.gentoo.org/wiki/CD/DVD/BD_writing
+```
+[1]: https://wiki.gentoo.org/wiki/CD/DVD/BD_writing
 
-=== resize partition (use with carefully may damage data) ===
-{{{sh
+### resize partition (use with carefully may damage data)
+```sh
 # reducing the size
 umount /dev/sda3
 e2fsck -f /dev/sda3
@@ -66,4 +64,10 @@ e2fsck -f /dev/sda4
 resize2fs /dev/sda4
 e2fsck -f /dev/sda4
 mount /dev/sda4
-}}}
+```
+
+### simple internet sharing for subnet
+```sh
+sysctl net/ipv4/ip_forward=1
+iptables -t nat -A POSTROUTING -o enp41s0 -j MASQUERADE
+```
