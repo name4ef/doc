@@ -71,3 +71,11 @@ mount /dev/sda4
 sysctl net/ipv4/ip_forward=1
 iptables -t nat -A POSTROUTING -o enp41s0 -j MASQUERADE
 ```
+
+### clear cache
+```sh
+sync; echo 1 > /proc/sys/vm/drop_caches # clear PageCache only
+sync; echo 2 > /proc/sys/vm/drop_caches # clear dentries and inodes
+sync; echo 3 > /proc/sys/vm/drop_caches # clear pagecache, dentries, inodes
+```
+[1]: https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/
