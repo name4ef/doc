@@ -774,3 +774,8 @@ set preview_images_method ueberzug
 EOF
 ```
 [1]: https://github.com/ranger/ranger/wiki/Image-Previews
+
+### use weak password
+```sh
+sed 's/enforce=everyone/enforce=none/' -i /etc/security/passwdqc.conf
+```
