@@ -28,16 +28,16 @@ export _ROOT=/dev/sda3 &&
 mkfs.vfat $_EFI &&
 mkswap $_SWAP && swapon $_SWAP &&
 mkfs.ext4 $_ROOT && mount $_ROOT /mnt/gentoo && cd /mnt/gentoo &&
-links https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-stage3-amd64/
+links https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/
 # or links https://www.gentoo.org/downloads/mirrors/
 #   select mirror
 #   go to *releases/amd64/autobuilds/current-stage3-amd64* directory
 ```
 - downloads:
     - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz*
-    - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz.DIGESTS.asc*
+    - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz.DIGESTS*
 ```sh
-grep $(openssl dgst -r -sha512 stage3-amd64-*.tar.xz) *.asc &&
+sha512sum -c *.DIGESTS
 tar xpf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner &&
 cat << EOF >> etc/portage/make.conf &&
 GENTOO_MIRRORS="http://mirror.yandex.ru/gentoo-distfiles/" # mirrorselect -i -o >> etc/portage/make.conf
@@ -51,7 +51,6 @@ chroot . /bin/bash
 ```sh
 source /etc/profile && export PS1="(chroot) ${PS1}" &&
 emerge-webrsync &&
-emerge --verbose --update --deep --newuse @world &&
 echo "Asia/Tomsk" > /etc/timezone && emerge --config sys-libs/timezone-data &&
 emerge net-misc/ntp && ntpd -q -g && # TODO test with ntp-client only
 echo "export LANG='en_US.UTF8'" >> /etc/profile.env &&
@@ -117,6 +116,7 @@ image = /boot/vmlinuz-5.4.60-gentoo-x86_64
     initrd = /boot/initramfs-5.4.60-gentoo-x86_64.img
     label = "Linux"
     root = /dev/vda3
+    append="nomodeset"
     read-only
 ```
 #### boot over grub (UEFI)
