@@ -62,6 +62,7 @@ eselect locale list
 ```sh
 env-update && source /etc/profile && export PS1="(chroot) ${PS1}" &&
 echo "sys-kernel/linux-firmware linux-fw-redistributable no-source-code" >> /etc/portage/package.license &&
+echo "app-editors/vim python" >> /etc/portage/package.use/app-editors &&
 emerge \
     sys-kernel/gentoo-sources \
     sys-kernel/genkernel \
