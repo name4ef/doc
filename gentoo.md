@@ -780,3 +780,9 @@ EOF
 ```sh
 sed 's/enforce=everyone/enforce=none/' -i /etc/security/passwdqc.conf
 ```
+
+### some of solution for search package which contains file
+```sh
+emerge -av app-portage/pfl
+e-file $(which mkfs.ext4)
+```
