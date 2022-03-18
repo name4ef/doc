@@ -79,3 +79,12 @@ sync; echo 2 > /proc/sys/vm/drop_caches # clear dentries and inodes
 sync; echo 3 > /proc/sys/vm/drop_caches # clear pagecache, dentries, inodes
 ```
 [1]: https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/
+
+### creating core dump files if program is crushed
+```sh
+# check limit seze for core dump file:
+ulimit -c
+# set unlimit or some size (for more security)
+ulimit -c unlimited # or <SIZE>
+```
+[1]: https://stackoverflow.com/questions/6152232/how-to-generate-core-dump-file-in-ubuntu
