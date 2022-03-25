@@ -150,7 +150,7 @@ reboot
  - https://www.gentoo.org/get-started/
  - https://wiki.gentoo.org/wiki/Handbook:AMD64
 
-distcc for emerge 
+distcc for emerge
 -----------------
  1. ssh root@calculate
      1. emerge --ask sys-devel/distcc
@@ -175,28 +175,28 @@ distcc for emerge
 ----
  - https://wiki.gentoo.org/wiki/Distcc
 
-can't ping under regular user (ping: socket: Operation not permitted) 
+can't ping under regular user (ping: socket: Operation not permitted)
 ---------------------------------------------------------------------
 ```sh
 emerge -C net-misc/iputils
 emerge net-misc/iputils
 ```
 
-write iso image of windows distribution to usb flash 
+write iso image of windows distribution to usb flash
 ----------------------------------------------------
 ```sh
 emerge -av woeusb
 woeusb --device Win10_1909_Russian_x64.iso --target-filesystem NTFS /dev/sdc
 ```
 
-set hostname 
+set hostname
 ------------
 ```sh
 vim /etc/{conf.d/hostname,hosts}
 hostname <hostname>
 ```
 
-usage only needed network interface (ex. wired only) 
+usage only needed network interface (ex. wired only)
 ----------------------------------------------------
 ```sh
 vim /etc/conf.d/net
@@ -210,7 +210,7 @@ rc-update add net.enp2s0 default
 ```
 [1]: https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/System#Automatically_start_networking_at_boot
 
-making bootable gentoo LiveUSB 
+making bootable gentoo LiveUSB
 ------------------------------
 ```sh
 emerge --ask sys-fs/dosfstools sys-boot/syslinux
@@ -238,13 +238,13 @@ syslinux /dev/sdb1 # install the syslinux bootloader on the USB drive
 ----
 - https://wiki.gentoo.org/wiki/LiveUSB/Guide
 
-masked by: ~amd64 keyword 
+masked by: ~amd64 keyword
 -------------------------
 ```sh
 echo 'ACCEPT_KEYWORDS="~amd64"' >> /etc/portage/make.conf
 ```
 
-reset tvheadend password 
+reset tvheadend password
 ------------------------
 *Will be reset all settings besides password*
 ```sh
@@ -253,7 +253,7 @@ rm -rf /var/lib/tvheadend
 /etc/init.d/tvheadend start
 ```
 
-enable wake on lan 
+enable wake on lan
 ------------------
 ```sh
 emerge -av sys-apps/ethtool
@@ -287,7 +287,7 @@ qlist -IC 'x11-base/*' 'x11-drivers/*'
 quse elogind
 ```
 
-packages 
+packages
 --------
 #### remove
 ```sh
@@ -306,7 +306,7 @@ emerge --ask --depclean
 ----
 - https://wiki.gentoo.org/wiki/Upgrading_Gentoo
 
-qemu 
+qemu
 ====
 ```sh
 echo "app-emulation/qemu usb" >> /etc/portage/package.use
@@ -368,20 +368,20 @@ qemu-system-x86_64 \
 - https://davidyat.es/2016/09/08/gpu-passthrough/
 - https://www.kernel.org/doc/Documentation/vfio.txt
 - https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Ensuring_that_the_groups_are_valid
-##### applying ACS patch 
+##### applying ACS patch
 ```sh
 git clone https://github.com/feniksa/gentoo_ACS_override_patch.git /etc/portage/patches
 emerge -av gentoo-sources
 genkernel kernel
 ```
-#### boot trought uefi 
+#### boot trought uefi
 ```sh
 emerge sys-firmware/edk2-ovmf
 qemu-system-x86_64 \
     -bios /usr/share/edk2-ovmf/OVMF_CODE.fd \
     -cdrom /usr/share/edk2-ovmf/UefiShell.iso
 ```
-#### set framebuffer resolution (1920x1080) 
+#### set framebuffer resolution (1920x1080)
 ```sh
 emerge -a x11-drivers/xf86-video-qxl
 ```
@@ -393,9 +393,9 @@ echo 0 > /sys/class/vtconsole/vtcon1/bind
 #### Dumping rom
 ```sh
 echo '0000:05:00.0' > /sys/bus/pci/drivers/vfio-pci/unbind
-echo 1 > /sys/bus/pci/devices/0000\:05\:00.0/rom 
+echo 1 > /sys/bus/pci/devices/0000\:05\:00.0/rom
 cat /sys/bus/pci/devices/0000\:05\:00.0/rom > vega.bin
-echo 0 > /sys/bus/pci/devices/0000\:05\:00.0/rom 
+echo 0 > /sys/bus/pci/devices/0000\:05\:00.0/rom
 echo '0000:05:00.0' > /sys/bus/pci/drivers/vfio-pci/bind
 ```
 #### use cifs for share directory
@@ -406,14 +406,14 @@ qemu-system-x86_64 \
 # \\10.0.2.4\qemu
 ```
 
-grub automaticly detect other OS 
+grub automaticly detect other OS
 --------------------------------
 ```sh
 emerge --ask --newuse sys-boot/os-prober
 grub-mkconfig -o /tmp/grub.cfg # place for grub config
 ```
 
-show file of package 
+show file of package
 --------------------
 ```sh
 emerge app-portage/gentoolkit
@@ -422,7 +422,7 @@ equery files --tree sys-firmware/edk2-ovmf
 ----
 - https://wiki.gentoo.org/wiki/Equery
 
-play file through gst-launch to fbdev 
+play file through gst-launch to fbdev
 -------------------------------------
 ```sh
 emerge \
@@ -443,7 +443,7 @@ gst-launch-1.0 filesrc location=video03.mp4 \
 - https://lists.archive.carbon60.com/gentoo/user/166724
 - https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
 
-monitorix and so on 
+monitorix and so on
 -------------------
 ```sh
 emerge -av \
@@ -455,7 +455,7 @@ rc-update add monitorix default
 openrc
 ```
 
-connect trackpad via bluetooth 
+connect trackpad via bluetooth
 ------------------------------
 ```sh
 emerge -av net-wireless/bluez
@@ -486,7 +486,7 @@ DISPLAY=:0 ./BaicalServer.x64.v5.3.1.AppImage
 - http://baical.net/index.html
 - https://wiki.gentoo.org/wiki/AppImage
 
-installation and configure of pulseaudio 
+installation and configure of pulseaudio
 ----------------------------------------
 ```sh
 vim /etc/portage/make.conf
@@ -497,7 +497,7 @@ emerge --ask --changed-use --deep --update --newuse @world
 ----
 - https://wiki.gentoo.org/wiki/PulseAudio
 
-install and configure proprietary nvidia drivers (v455.38) 
+install and configure proprietary nvidia drivers (v455.38)
 ----------------------------------------------------------
 ```sh
 eselect kernel list
@@ -520,14 +520,14 @@ vim /etc/X11/xorg.conf.d/nvidia.conf
         Option "AllowEmptyInitialConfiguration"
     EndSection
 vim /usr/lib64/X11/xdm/Xsetup_0 # go from /etc/X11/xdm/xdm-config
-	xrandr --setprovideroutputsource modesetting NVIDIA-0
-	xrandr --output eDP-1-1 --off
-	xrandr --output HDMI-1-2 --mode 2560x1080
+    xrandr --setprovideroutputsource modesetting NVIDIA-0
+    xrandr --output eDP-1-1 --off
+    xrandr --output HDMI-1-2 --mode 2560x1080
 vim /etc/modprobe.d/blacklist.conf
     blacklist nouveau
 ```
 
-taskopen 
+taskopen
 --------
 ```sh
 emerge -av dev-perl/JSON x11-misc/xdg-utils
@@ -536,14 +536,14 @@ git clone https://github.com/jschlatow/taskopen
 cd taskopen; cp taskopen ~/.bin
 ```
 
-set qutebrowser as default 
+set qutebrowser as default
 --------------------------
 ```sh
 ls /usr/share/applications/org.qutebrowser.qutebrowser.desktop
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 ```
 
-set mupdf for pdf & djviewer for djvu 
+set mupdf for pdf & djviewer for djvu
 -------------------------------------
 ```sh
 emerge -av mupdf app-text/djview
@@ -559,7 +559,7 @@ xdg-mime default djvulibre-djview4.desktop "image/vnd.djvu"
 xdg-mime default djvulibre-djview4.desktop "image/vnd.djvu+multipage"
 ```
 
-bluetooth headset 
+bluetooth headset
 -----------------
 ```sh
 vim /etc/portage/package.use
@@ -570,7 +570,7 @@ pulseaudio -k; pulseaudio --start
 ----
 - https://wiki.gentoo.org/wiki/Bluetooth_headset
 
-transmission 
+transmission
 ------------
 ```sh
 emerge -av transmission tremc
@@ -586,7 +586,7 @@ openrc
 ----
 - https://addons.mozilla.org/en-US/firefox/addon/transmission-easy-client
 
-use second screen over x11vnc 
+use second screen over x11vnc
 -----------------------------
 *under work*
 ```sh
@@ -609,13 +609,13 @@ x11vnc -forever -bg -geometry 1280x720 -shared -noprimary \
 ----
 - https://magazine.odroid.com/article/multi-screen-desktop-using-vnc-part-2-an-improved-and-simplified-version/
 
-one of solution for rebuild kernel 
+one of solution for rebuild kernel
 ----------------------------------
 ```sh
 genkernel --menuconfig --no-clean all
 ```
 
-fixing: Bluetooth: hci0: don't support firmware rome 0x1020200 
+fixing: Bluetooth: hci0: don't support firmware rome 0x1020200
 --------------------------------------------------------------
 ```sh
 emerge -av sys-firmware/bluez-firmware
@@ -627,7 +627,7 @@ hciconfig hci0 up # see: dmesg -Hw
 ----
 - https://github.com/BrandomRobor/btusb-210681-fix/blob/main/rome_fix.patch
 
-something like solution for fix trouble when can't play sound through hdmi 
+something like solution for fix trouble when can't play sound through hdmi
 --------------------------------------------------------------------------
 ```sh
 echo "options snd_hda_intel probe_oly=0" >> /etc/modprobe.d/snd.conf
@@ -643,7 +643,7 @@ but sound can be play through hdmi output
 ----
 - https://github.com/linux-surface/linux-surface/issues/39
 
-prosody 
+prosody
 -------
 *under work*
 ```sh
@@ -653,14 +653,14 @@ vim /etc/jabber/prosody.cfg.lua
 ----
 - https://prosody.im/doc/configure
 
-When install Qt via online installer 
+When install Qt via online installer
 ------------------------------------
 If install Qt via online installer (qt-unified-linux-x64-4.0.1-1-online.run)
 may has error about *krb* like this:
 *error while loading shared libraries: libgssapi_krb5.so.2: cannot open shared...*
 for fix it need install mit-krb5: `emerge -av app-crypt/mit-krb5`.
 
-configure of pptp client 
+configure of pptp client
 ------------------------
 ```sh
 emerge -av net-dialup/pptpclient
@@ -670,12 +670,12 @@ pptpsetup \
     --username "<username>" \
     --password "<password>"
 pppd call "<tunnelname>"
-route add -net 192.168.70.0/24 gw 192.168.70.1 
+route add -net 192.168.70.0/24 gw 192.168.70.1
 
 killall pppd # for disconnect
 ```
 
-docker 
+docker
 ------
 ```sh
 emerge -av \
@@ -719,7 +719,7 @@ EOF
 docker-compose up
 ```
 
-nvtop 
+nvtop
 -----
 ```sh
 emerge -av app-portage/layman
@@ -758,11 +758,11 @@ ccache
 ``` sh
 emerge -av dev-util/ccache
 vim /etc/portage/make.conf
-	FEATURES="ccache"
-	CCACHE_DIR="/var/cache/ccache"
+    FEATURES="ccache"
+    CCACHE_DIR="/var/cache/ccache"
 vim ~/.zshrc
-	export PATH="/usr/lib/ccache/bin${PATH:+:}${PATH}"
-	export CCACHE_DIR="/var/cache/ccache"
+    export PATH="/usr/lib/ccache/bin${PATH:+:}${PATH}"
+    export CCACHE_DIR="/var/cache/ccache"
 ccache -s # show statistics
 ```
 
