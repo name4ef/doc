@@ -786,3 +786,11 @@ sed 's/enforce=everyone/enforce=none/' -i /etc/security/passwdqc.conf
 emerge -av app-portage/pfl
 e-file $(which mkfs.ext4)
 ```
+
+### sdcv
+```sh
+emerge -av \
+    app-text/sdcv \
+    app-dicts/stardict-quick-ru-en \
+    app-dicts/stardict-freedict-eng-rus
+```
