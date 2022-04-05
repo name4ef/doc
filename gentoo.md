@@ -37,7 +37,7 @@ links https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/
     - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz*
     - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz.DIGESTS*
 ```sh
-sha512sum -c *.DIGESTS
+sha512sum --ignore-missing -c *.DIGESTS
 tar xpf stage3-*.tar.xz --xattrs-include='*.*' --numeric-owner &&
 cat << EOF >> etc/portage/make.conf &&
 GENTOO_MIRRORS="http://mirror.yandex.ru/gentoo-distfiles/" # mirrorselect -i -o >> etc/portage/make.conf
