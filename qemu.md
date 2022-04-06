@@ -10,7 +10,7 @@ kvm-ok
 lsmod |grep kvm
     kvm_intel             253952  0
     kvm                   655360  1 kvm_intel
-    
+
 ## setting up hugepages
 #hugeadm --explain
 #sudo vim /etc/default/qemu-kvm
@@ -21,7 +21,7 @@ lsmod |grep kvm
 ##8192M / 2048k + 7.5% = 4300
 #sudo vim /etc/sysctl.conf
 #    vm.nr_hugepages = 4300
-    
+
 # creating the vm
 dd if=/dev/zero of=ubuntu20.img bs=1M seek=24000 count=0
 qemu-system-x86_64 -curses
@@ -67,3 +67,4 @@ echo -n "usb3" > /sys/bus/usb/drivers/usb/bind
 ```
 
 increase disk size: `qemu-img resize windows-10.qcow2 64G`
+for ping from guist: `sysctl net/ipv4/ping_group_range='0 2147483647'`
