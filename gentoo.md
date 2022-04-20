@@ -794,3 +794,29 @@ emerge -av \
     app-dicts/stardict-quick-ru-en \
     app-dicts/stardict-freedict-eng-rus
 ```
+
+### ebuilds
+#### writing ebuilds
+```
+mkdir /var/db/repos/SOME_REPO_NAME; cd /var/db/repos/SOME_REPO_NAME
+mkdir sci-libs/libsigrok4DSL; cd sci-libs/libsigrok4DSL
+vim libsigrok4DSL-0.2.0.ebuild
+ebuild ./libsigrok4DSL-0.2.0.ebuild manifest clean install
+```
+#### ebuilds repository
+```sh
+emerge -av app-eselect/eselect-repository
+eselect repository create SOME_REPO_NAME
+```
+##### put to git (if needed)
+```sh
+cd /var/db/repos/SOME_REPO_NAME
+git init .; git add *; git commit -m "some message"; # git ...
+eselect repository remove -f SOME_REPO_NAME
+eselect repository add SOME_REPO_NAME git url://some/path/to/git/repo
+emerge --sync SOME_REPO_NAME
+emerge -av libsigrok4DSL
+```
+[1]: https://wiki.gentoo.org/wiki/Handbook:Parts/Portage/CustomTree#Defining_a_custom_repository
+[2]: https://devmanual.gentoo.org/ebuild-writing/variables/index.html
+[3]: https://devmanual.gentoo.org/general-concepts/autotools/index.html
