@@ -3,3 +3,4 @@
 -D  set macro symbol from command line (for example: `-DDEBUG=2`, is some like:
     `#defile DEBUG 2`)
 -MM analysed of source files and give information about interdependence
+-S -masm=intel stop at stage of assembler code generation
