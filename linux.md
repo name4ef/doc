@@ -88,3 +88,5 @@ ulimit -c
 ulimit -c unlimited # or <SIZE>
 ```
 [1]: https://stackoverflow.com/questions/6152232/how-to-generate-core-dump-file-in-ubuntu
+
+unlock blocked user: `faillock --user yourusername --reset`
