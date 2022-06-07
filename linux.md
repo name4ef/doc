@@ -90,3 +90,12 @@ ulimit -c unlimited # or <SIZE>
 [1]: https://stackoverflow.com/questions/6152232/how-to-generate-core-dump-file-in-ubuntu
 
 unlock blocked user: `faillock --user yourusername --reset`
+
+### swapfile
+```sh
+fallocate -l 8GiB swapfile
+chmod 600 swapfile
+mkswap swapfile
+swapon swapfile
+```
+[1]: https://wiki.gentoo.org/wiki/Swap
