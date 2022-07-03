@@ -1,5 +1,4 @@
-install amd64
-=============
+### install amd64
 https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-install-amd64-minimal/
 #### up network and run sshd
 ```sh
@@ -21,7 +20,7 @@ poweroff
 #### basic action
  - create efi, swap and root partitions over cfdisk (gpt)
 ```sh
-# WARNING: partitions of sda will be overwrited
+ # WARNING: partitions of sda will be overwrited
 export  _EFI=/dev/sda1 &&
 export _SWAP=/dev/sda2 &&
 export _ROOT=/dev/sda3 &&
@@ -29,9 +28,9 @@ mkfs.vfat $_EFI &&
 mkswap $_SWAP && swapon $_SWAP &&
 mkfs.ext4 $_ROOT && mount $_ROOT /mnt/gentoo && cd /mnt/gentoo &&
 links https://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/
-# or links https://www.gentoo.org/downloads/mirrors/
-#   select mirror
-#   go to *releases/amd64/autobuilds/current-stage3-amd64* directory
+ # or links https://www.gentoo.org/downloads/mirrors/
+ #   select mirror
+ #   go to *releases/amd64/autobuilds/current-stage3-amd64* directory
 ```
 - downloads:
     - *stage3-amd64-<YYYYMMDDTHHMMSSZ>.tar.xz*
@@ -210,8 +209,7 @@ rc-update add net.enp2s0 default
 ```
 [1]: https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/System#Automatically_start_networking_at_boot
 
-making bootable gentoo LiveUSB
-------------------------------
+### making bootable gentoo LiveUSB
 ```sh
 emerge --ask sys-fs/dosfstools sys-boot/syslinux
 cfdisk /dev/sdb
@@ -222,7 +220,7 @@ mkdir -p /mnt/{iso,usb}
 mount -o loop,ro -t iso9660 /path/to/isofile.iso /mnt/iso
 mount -t vfat /dev/sdb1 /mnt/usb
 
-# Copying and moving files:
+ # Copying and moving files:
 cp -r /mnt/iso/* /mnt/usb
 mv /mnt/usb/isolinux/* /mnt/usb
 mv /mnt/usb/isolinux.cfg /mnt/usb/syslinux.cfg
@@ -235,17 +233,14 @@ sed -i \
 umount /mnt/{iso,usb}
 syslinux /dev/sdb1 # install the syslinux bootloader on the USB drive
 ```
-----
-- https://wiki.gentoo.org/wiki/LiveUSB/Guide
+[1]: https://wiki.gentoo.org/wiki/LiveUSB/Guide
 
-masked by: ~amd64 keyword
--------------------------
+### masked by: ~amd64 keyword
 ```sh
 echo 'ACCEPT_KEYWORDS="~amd64"' >> /etc/portage/make.conf
 ```
 
-reset tvheadend password
-------------------------
+### reset tvheadend password
 *Will be reset all settings besides password*
 ```sh
 /etc/init.d/tvheadend stop
@@ -253,14 +248,13 @@ rm -rf /var/lib/tvheadend
 /etc/init.d/tvheadend start
 ```
 
-enable wake on lan
-------------------
+### enable wake on lan
 ```sh
 emerge -av sys-apps/ethtool
 
-# Checking and set current WOL status
-#   d - disable
-#   g - wake of MagicPackettm
+ # Checking and set current WOL status
+ #   d - disable
+ #   g - wake of MagicPackettm
 ethtool enp4s0 | grep -i wake
     Supports Wake-on: pumbg
     Wake-on: d
@@ -272,12 +266,10 @@ cd /etc/init.d; ln -s net.lo net.enp4s0
 rc-update add net.enp4s0 default
 openrc
 ```
-----
-- https://wiki.gentoo.org/wiki/Power_management/Ethernet
+[1]: https://wiki.gentoo.org/wiki/Power_management/Ethernet
 - https://wiki.gentoo.org/wiki/Handbook:X86/Networking/Introduction
 
-install xserver and dwm and so on
----------------------------------
+### install xserver and dwm and so on
 ```sh
 echo 'USE="consolekit -elogind -systemd"' >> /etc/portage/make.conf
 emerge -a xorg-server xdm dwm dmenu x11-terms/st x11-apps/setxkbmap
@@ -287,27 +279,23 @@ qlist -IC 'x11-base/*' 'x11-drivers/*'
 quse elogind
 ```
 
-packages
---------
+### packages
 #### remove
 ```sh
 emerge --deselect dev-python/six
 emerge -cvp
 emerge -c
-# emerge -avC sys-apps/sysvinit # TODO read about -C
+ # emerge -avC sys-apps/sysvinit # TODO read about -C
 ```
-----
-- https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
+[1]: https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
 #### upgrade
 ```sh
 emerge --ask --update --deep --newuse @world
 emerge --ask --depclean
 ```
-----
-- https://wiki.gentoo.org/wiki/Upgrading_Gentoo
+[1]: https://wiki.gentoo.org/wiki/Upgrading_Gentoo
 
-qemu
-====
+### qemu
 ```sh
 echo "app-emulation/qemu usb" >> /etc/portage/package.use
 emerge -a app-emulation/qemu sys-apps/usbutils
@@ -327,8 +315,8 @@ qemu-system-x86_64 \
 #### pci-passthrough
 ```sh
 lscpu | grep -E "vmx|svm" # VT-x or AMD-V must be supported by the processor
-# Go into BIOS (EFI) settings and turn on VT-d and IOMMU support
-# Note: Some EFI doesn't have IOMMU configuration settings
+ # Go into BIOS (EFI) settings and turn on VT-d and IOMMU support
+ # Note: Some EFI doesn't have IOMMU configuration settings
 vim /etc/default/grub
     # Intel (ex. TODO)
     GRUB_CMDLINE_LINUX="iommu=pt intel_iommu=on pcie_acs_override=downstream,multifunction"
@@ -363,11 +351,10 @@ qemu-system-x86_64 \
     -usb -device usb-tablet \
     -device vfio-pci,host=03:00.0
 ```
-----
-- https://wiki.gentoo.org/wiki/GPU_passthrough_with_libvirt_qemu_kvm
-- https://davidyat.es/2016/09/08/gpu-passthrough/
-- https://www.kernel.org/doc/Documentation/vfio.txt
-- https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Ensuring_that_the_groups_are_valid
+[1]: https://wiki.gentoo.org/wiki/GPU_passthrough_with_libvirt_qemu_kvm
+[2]:- https://davidyat.es/2016/09/08/gpu-passthrough/
+[3]:- https://www.kernel.org/doc/Documentation/vfio.txt
+[4]:- https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Ensuring_that_the_groups_are_valid
 ##### applying ACS patch
 ```sh
 git clone https://github.com/feniksa/gentoo_ACS_override_patch.git /etc/portage/patches
@@ -403,27 +390,23 @@ echo '0000:05:00.0' > /sys/bus/pci/drivers/vfio-pci/bind
 emerge -av net-fs/samba
 qemu-system-x86_64 \
     -device e1000,netdev=net0 -netdev user,id=net0,smb=/home/user1/soft \
-# \\10.0.2.4\qemu
+ # \\10.0.2.4\qemu
 ```
 
-grub automaticly detect other OS
---------------------------------
+### grub automaticly detect other OS
 ```sh
 emerge --ask --newuse sys-boot/os-prober
 grub-mkconfig -o /tmp/grub.cfg # place for grub config
 ```
 
-show file of package
---------------------
+### show file of package
 ```sh
 emerge app-portage/gentoolkit
 equery files --tree sys-firmware/edk2-ovmf
 ```
-----
-- https://wiki.gentoo.org/wiki/Equery
+[1]: https://wiki.gentoo.org/wiki/Equery
 
-play file through gst-launch to fbdev
--------------------------------------
+### play file through gst-launch to fbdev
 ```sh
 emerge \
     media-libs/gstreamer \
@@ -439,12 +422,10 @@ gst-launch-1.0 filesrc location=video03.mp4 \
     ! deinterlace \
     ! fbdevsink
 ```
-----
-- https://lists.archive.carbon60.com/gentoo/user/166724
-- https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
+[1]: https://lists.archive.carbon60.com/gentoo/user/166724
+[2]:- https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
 
-monitorix and so on
--------------------
+### monitorix and so on
 ```sh
 emerge -av \
     www-misc/monitorix \
@@ -455,8 +436,7 @@ rc-update add monitorix default
 openrc
 ```
 
-connect trackpad via bluetooth
-------------------------------
+### connect trackpad via bluetooth
 ```sh
 emerge -av net-wireless/bluez
 vim /etc/bluetooth/input.conf
@@ -471,34 +451,28 @@ bluetoothctl
     trust <mac>
     scan off
 ```
-----
-- https://wiki.gentoo.org/wiki/Bluetooth/pl
-- https://wiki.gentoo.org/wiki/Bluetooth_input_devices
+[1]: https://wiki.gentoo.org/wiki/Bluetooth/pl
+[1]: https://wiki.gentoo.org/wiki/Bluetooth_input_devices
 
-run baical server (AppImage application)
-----------------------------------------
+### run baical server (AppImage application)
 ```sh
 emerge -av sys-fs/fuse:0
 
 DISPLAY=:0 ./BaicalServer.x64.v5.3.1.AppImage
 ```
-----
-- http://baical.net/index.html
-- https://wiki.gentoo.org/wiki/AppImage
+[1]: http://baical.net/index.html
+[2]: https://wiki.gentoo.org/wiki/AppImage
 
-installation and configure of pulseaudio
-----------------------------------------
+### installation and configure of pulseaudio
 ```sh
 vim /etc/portage/make.conf
     USE="pulseaudio"
     ACCEPT_LICENSE="NPSL no-source-code linux-fw-redistributable"
 emerge --ask --changed-use --deep --update --newuse @world
 ```
-----
-- https://wiki.gentoo.org/wiki/PulseAudio
+[1]: https://wiki.gentoo.org/wiki/PulseAudio
 
-install and configure proprietary nvidia drivers (v455.38)
-----------------------------------------------------------
+### install and configure proprietary nvidia drivers (v455.38)
 ```sh
 eselect kernel list
 eselect kernel set 4 # it was 5.9.11
@@ -527,8 +501,7 @@ vim /etc/modprobe.d/blacklist.conf
     blacklist nouveau
 ```
 
-taskopen
---------
+### taskopen
 ```sh
 emerge -av dev-perl/JSON x11-misc/xdg-utils
 
@@ -536,15 +509,13 @@ git clone https://github.com/jschlatow/taskopen
 cd taskopen; cp taskopen ~/.bin
 ```
 
-set qutebrowser as default
---------------------------
+### set qutebrowser as default
 ```sh
 ls /usr/share/applications/org.qutebrowser.qutebrowser.desktop
 xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop
 ```
 
-set mupdf for pdf & djviewer for djvu
--------------------------------------
+### set mupdf for pdf & djviewer for djvu
 ```sh
 emerge -av mupdf app-text/djview
 
@@ -559,19 +530,16 @@ xdg-mime default djvulibre-djview4.desktop "image/vnd.djvu"
 xdg-mime default djvulibre-djview4.desktop "image/vnd.djvu+multipage"
 ```
 
-bluetooth headset
------------------
+### bluetooth headset
 ```sh
 vim /etc/portage/package.use
     media-sound/pulseaudio native-headset ofono-headset bluetooth dbus
 emerge -av media-sound/pulseaudio
 pulseaudio -k; pulseaudio --start
 ```
-----
-- https://wiki.gentoo.org/wiki/Bluetooth_headset
+[1]: https://wiki.gentoo.org/wiki/Bluetooth_headset
 
-transmission
-------------
+### transmission
 ```sh
 emerge -av transmission tremc
 vim /var/lib/transmission/config/settings.json
@@ -583,11 +551,9 @@ vim /var/lib/transmission/config/settings.json
 rc-update add transmission-daemon default
 openrc
 ```
-----
-- https://addons.mozilla.org/en-US/firefox/addon/transmission-easy-client
+[1]: https://addons.mozilla.org/en-US/firefox/addon/transmission-easy-client
 
-use second screen over x11vnc
------------------------------
+### use second screen over x11vnc
 *under work*
 ```sh
 vim /etc/X11/xorg.conf.d/nvidia.conf
@@ -606,17 +572,14 @@ x11vnc -forever -bg -geometry 1280x720 -shared -noprimary \
     -auth /var/lib/xdm/authdir/authfiles/A\:0-CkV3z6 -display :0 \
     -clip 1280x720+1920+0 -threads -noxdamage
 ```
-----
-- https://magazine.odroid.com/article/multi-screen-desktop-using-vnc-part-2-an-improved-and-simplified-version/
+[1]: https://magazine.odroid.com/article/multi-screen-desktop-using-vnc-part-2-an-improved-and-simplified-version/
 
-one of solution for rebuild kernel
-----------------------------------
+### one of solution for rebuild kernel
 ```sh
 genkernel --menuconfig --no-clean all
 ```
 
-fixing: Bluetooth: hci0: don't support firmware rome 0x1020200
---------------------------------------------------------------
+### fixing: Bluetooth: hci0: don't support firmware rome 0x1020200
 ```sh
 emerge -av sys-firmware/bluez-firmware
 echo "net-wireless/bluez deprecated" >> /etc/portage/package.use
@@ -624,11 +587,9 @@ emerge -av net-wireless/bluez
 hciconfig hci0 up # see: dmesg -Hw
 ```
 *Bug fixed on kernel since 5.11.2*
-----
-- https://github.com/BrandomRobor/btusb-210681-fix/blob/main/rome_fix.patch
+[1]: https://github.com/BrandomRobor/btusb-210681-fix/blob/main/rome_fix.patch
 
-something like solution for fix trouble when can't play sound through hdmi
---------------------------------------------------------------------------
+### something like solution for fix trouble when can't play sound through hdmi
 ```sh
 echo "options snd_hda_intel probe_oly=0" >> /etc/modprobe.d/snd.conf
 ```
@@ -640,28 +601,23 @@ Errors in dmesg continues to be:
 [  +0.000021] snd_hda_intel 0000:00:03.0: spurious response 0x0:0x0, last cmd=0x770503
 ```
 but sound can be play through hdmi output
-----
-- https://github.com/linux-surface/linux-surface/issues/39
+[1]: https://github.com/linux-surface/linux-surface/issues/39
 
-prosody
--------
+### prosody
 *under work*
 ```sh
 emerge -av net-im/prosody
 vim /etc/jabber/prosody.cfg.lua
 ```
-----
-- https://prosody.im/doc/configure
+[1]: https://prosody.im/doc/configure
 
-When install Qt via online installer
-------------------------------------
+### when install Qt via online installer
 If install Qt via online installer (qt-unified-linux-x64-4.0.1-1-online.run)
 may has error about *krb* like this:
 *error while loading shared libraries: libgssapi_krb5.so.2: cannot open shared...*
 for fix it need install mit-krb5: `emerge -av app-crypt/mit-krb5`.
 
-configure of pptp client
-------------------------
+### configure of pptp client
 ```sh
 emerge -av net-dialup/pptpclient
 pptpsetup \
@@ -675,8 +631,7 @@ route add -net 192.168.70.0/24 gw 192.168.70.1
 killall pppd # for disconnect
 ```
 
-docker
-------
+### docker
 ```sh
 emerge -av \
     app-emulation/docker \
@@ -719,8 +674,7 @@ EOF
 docker-compose up
 ```
 
-nvtop
------
+### nvtop
 ```sh
 emerge -av app-portage/layman
 layman-updater -R
@@ -729,32 +683,29 @@ emerge -av nvtop
 nvtop
 ```
 
-connect to termux sshd over usb cabel
--------------------------------------
+### connect to termux sshd over usb cabel
 ```sh
 emerge -av dev-util/android-tools
 
-# at phone:
-# 1. go to Settings > About device
-# 2. tap the Build number 7 times to make developer options available
-# 3. go to Settings > System > Developer Options
-# 4. now hit Enable USB-Debugging
+ # at phone:
+ # 1. go to Settings > About device
+ # 2. tap the Build number 7 times to make developer options available
+ # 3. go to Settings > System > Developer Options
+ # 4. now hit Enable USB-Debugging
 
 adb devices # list of attached devices
 adb forward tcp:6100 tcp:7100 # forware local port 6100 to port 7100 of phone
 
-# run in termux
+ # run in termux
 whoami # get username for connet
 passwd # and set password for this user
 sshd -p 7100
 
 ssh u0_a166@localhost -p 6100 # now may connect to sshd of termux
 ```
-----
-- https://wiki.gentoo.org/wiki/Android/adb
+[1]: https://wiki.gentoo.org/wiki/Android/adb
 
-ccache
-------
+### ccache
 ``` sh
 emerge -av dev-util/ccache
 vim /etc/portage/make.conf
@@ -820,3 +771,12 @@ emerge -av libsigrok4DSL
 [1]: https://wiki.gentoo.org/wiki/Handbook:Parts/Portage/CustomTree#Defining_a_custom_repository
 [2]: https://devmanual.gentoo.org/ebuild-writing/variables/index.html
 [3]: https://devmanual.gentoo.org/general-concepts/autotools/index.html
+
+### building of gentoo's admincd iso
+*under work*
+```sh
+mkdir -p /var/tmp/catalyst/builds/hardened/
+wget https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-hardened-openrc/stage3-amd64-hardened-openrc-20220626T170536Z.tar.xz \
+    -O /var/tmp/catalyst/builds/hardened/stage3-amd64-hardened-openrc-latest.tar.xz
+```
+[1]: https://github.com/gentoo/catalyst/blob/master/examples/livecd-stage2_template.spec
