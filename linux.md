@@ -35,7 +35,7 @@ and `killall kdm` to /etc/kde/kdm/Xreset:
 emerge --ask app-cdr/cdrtools # for gentoo
 mkisofs -o some.iso some/
 cdrecord dev=/dev/cdrom some.iso
-# For check:
+ # For check:
 dd if=/dev/cdrom of=/tmp/cdimg1.iso
 md5sum /tmp/cdimg1.iso some.iso
 rm /tmp/cdimg1.iso
@@ -44,7 +44,7 @@ rm /tmp/cdimg1.iso
 
 ### resize partition (use with carefully may damage data)
 ```sh
-# reducing the size
+ # reducing the size
 umount /dev/sda3
 e2fsck -f /dev/sda3
 resize2fs /dev/sda3 670G # 670G is new size
@@ -52,7 +52,7 @@ fdisk /dev/sda # remove sda3 and create it with new size: 670G
 e2fsck -f /dev/sda3
 mount /dev/sda3
 
-# increasing the size
+ # increasing the size
 umount /dev/sda4
 e2fsck -f /dev/sda4
 cfdisk /dev/sda
@@ -82,9 +82,9 @@ sync; echo 3 > /proc/sys/vm/drop_caches # clear pagecache, dentries, inodes
 
 ### creating core dump files if program is crushed
 ```sh
-# check limit seze for core dump file:
+ # check limit seze for core dump file:
 ulimit -c
-# set unlimit or some size (for more security)
+ # set unlimit or some size (for more security)
 ulimit -c unlimited # or <SIZE>
 ```
 [1]: https://stackoverflow.com/questions/6152232/how-to-generate-core-dump-file-in-ubuntu
