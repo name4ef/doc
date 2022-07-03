@@ -260,7 +260,7 @@ rc-update add net.enp4s0 default
 openrc
 ```
 [1]: https://wiki.gentoo.org/wiki/Power_management/Ethernet
-- https://wiki.gentoo.org/wiki/Handbook:X86/Networking/Introduction
+[2]: https://wiki.gentoo.org/wiki/Handbook:X86/Networking/Introduction
 
 ### install xserver and dwm and so on
 ```sh
@@ -345,9 +345,9 @@ qemu-system-x86_64 \
     -device vfio-pci,host=03:00.0
 ```
 [1]: https://wiki.gentoo.org/wiki/GPU_passthrough_with_libvirt_qemu_kvm
-[2]:- https://davidyat.es/2016/09/08/gpu-passthrough/
-[3]:- https://www.kernel.org/doc/Documentation/vfio.txt
-[4]:- https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Ensuring_that_the_groups_are_valid
+[2]: https://davidyat.es/2016/09/08/gpu-passthrough/
+[3]: https://www.kernel.org/doc/Documentation/vfio.txt
+[4]: https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Ensuring_that_the_groups_are_valid
 ##### applying ACS patch
 ```sh
 git clone https://github.com/feniksa/gentoo_ACS_override_patch.git /etc/portage/patches
@@ -416,7 +416,7 @@ gst-launch-1.0 filesrc location=video03.mp4 \
     ! fbdevsink
 ```
 [1]: https://lists.archive.carbon60.com/gentoo/user/166724
-[2]:- https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
+[2]: https://wiki.gentoo.org/wiki/Knowledge_Base:Overriding_environment_variables_per_package
 
 ### monitorix and so on
 ```sh
