@@ -145,12 +145,10 @@ exit
 cd && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -R /mnt/gentoo &&
 reboot
 ```
-----
- - https://www.gentoo.org/get-started/
- - https://wiki.gentoo.org/wiki/Handbook:AMD64
+[1]: https://www.gentoo.org/get-started/
+[2]: https://wiki.gentoo.org/wiki/Handbook:AMD64
 
-distcc for emerge
------------------
+### distcc for emerge
  1. ssh root@calculate
      1. emerge --ask sys-devel/distcc
      2. vim /etc/conf.d/distccd
@@ -171,32 +169,27 @@ distcc for emerge
      MAKEOPTS="-j29 -l8"
      FEATURES="distcc"
      ```
-----
- - https://wiki.gentoo.org/wiki/Distcc
+[1]: https://wiki.gentoo.org/wiki/Distcc
 
-can't ping under regular user (ping: socket: Operation not permitted)
----------------------------------------------------------------------
+### can't ping under regular user (ping: socket: Operation not permitted)
 ```sh
 emerge -C net-misc/iputils
 emerge net-misc/iputils
 ```
 
-write iso image of windows distribution to usb flash
-----------------------------------------------------
+### write iso image of windows distribution to usb flash
 ```sh
 emerge -av woeusb
 woeusb --device Win10_1909_Russian_x64.iso --target-filesystem NTFS /dev/sdc
 ```
 
-set hostname
-------------
+### set hostname
 ```sh
 vim /etc/{conf.d/hostname,hosts}
 hostname <hostname>
 ```
 
-usage only needed network interface (ex. wired only)
-----------------------------------------------------
+### usage only needed network interface (ex. wired only)
 ```sh
 vim /etc/conf.d/net
     config_enp2s0="dhcp"
