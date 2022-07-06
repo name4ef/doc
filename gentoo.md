@@ -287,6 +287,10 @@ emerge --ask --update --deep --newuse @world
 emerge --ask --depclean
 ```
 [1]: https://wiki.gentoo.org/wiki/Upgrading_Gentoo
+#### search all version of package
+```sh
+equery list -po vim
+```
 
 ### qemu
 ```sh
