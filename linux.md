@@ -99,3 +99,9 @@ mkswap swapfile
 swapon swapfile
 ```
 [1]: https://wiki.gentoo.org/wiki/Swap
+
+### ramdisk
+```sh
+mount -t ramfs -o size=24G ramfs /tmp/ramdisk
+echo "ramfs /var/tmp ramfs size=24G" >> /etc/fstab
+```
