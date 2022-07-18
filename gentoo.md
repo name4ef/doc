@@ -283,8 +283,20 @@ emerge -c
 [1]: https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
 #### upgrade
 ```sh
+unset LD_LIBRARY_PATH
+unset CCACHE_DIR
 emerge --ask --update --deep --newuse @world
 emerge --ask --depclean
+```
+##### helpful when conflict of update
+```sh
+qdepends -QF '%{CAT}/%{PN}:%{SLOT}' ^dev-qt/qtcore-5.15.5-r1:5/5.15.5
+ # Note: The ^ is significant, as is using the package in CAT/PN:SLOT/SUBSLOT syntax.
+emerge --ignore-default-opts -va1 $( \
+    qdepends -QF '%{CAT}/%{PN}:%{SLOT}' '^dev-qt/qtcore-5.15.5-r1:5/5.15.5' \
+    | cut -d ":" -f 1,2 )
+
+emerge --update --newuse --deep --with-bdeps=y @world
 ```
 [1]: https://wiki.gentoo.org/wiki/Upgrading_Gentoo
 #### search all version of package
