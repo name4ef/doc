@@ -93,10 +93,11 @@ unlock blocked user: `faillock --user yourusername --reset`
 
 ### swapfile
 ```sh
-fallocate -l 8GiB swapfile
-chmod 600 swapfile
-mkswap swapfile
-swapon swapfile
+fallocate -l 8GiB /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo "/swapfile none swap sw 0 0" >> /etc/fstab
 ```
 [1]: https://wiki.gentoo.org/wiki/Swap
 
