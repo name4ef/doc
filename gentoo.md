@@ -283,8 +283,7 @@ emerge -c
 [1]: https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet#Package_removal
 #### upgrade
 ```sh
-unset LD_LIBRARY_PATH
-unset CCACHE_DIR
+unset LD_LIBRARY_PATH CCACHE_DIR
 emerge --ask --update --deep --newuse @world
 emerge --ask --depclean
 ```
