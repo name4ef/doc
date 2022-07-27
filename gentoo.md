@@ -783,8 +783,39 @@ emerge -av libsigrok4DSL
 ### building of gentoo's admincd iso
 *under work*
 ```sh
-mkdir -p /var/tmp/catalyst/builds/hardened/
-wget https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-hardened-openrc/stage3-amd64-hardened-openrc-20220626T170536Z.tar.xz \
-    -O /var/tmp/catalyst/builds/hardened/stage3-amd64-hardened-openrc-latest.tar.xz
+emerge -av catalyst pixz
+git clone https://gitweb.gentoo.org/proj/releng.git
+mkdir -p /var/tmp/catalyst/builds/default/
+
+wget https://gentoo.osuosl.org/releases/amd64/autobuilds/current-stage3-amd64-openrc/stage3-amd64-openrc-20220619T170540Z.tar.xz \
+    -O /var/tmp/catalyst/builds/default/stage3-amd64-openrc-latest.tar.xz
+
+catalyst -s latest
+
+cat << EOF > stage1-openrc.sed
+s#@REPO_DIR@#$(pwd)/releng#g
+s#@TIMESTAMP@#latest#g
+EOF
+catalyst -f <(sed -f stage1-openrc.sed \
+    releng/releases/specs/amd64/stage1-openrc.spec)
+
+cat << EOF > installcd-stage1.sed
+s#@REPO_DIR@#$(pwd)/releng#g
+s#@TIMESTAMP@#latest#g
+/livecd.packages/ {
+  a     app-editors/vim
+}
+EOF
+catalyst -f <(sed -f installcd-stage1.sed \
+    releng/releases/specs/amd64/installcd-stage1.spec)
+echo 'GRUB_PLATFORMS="efi-64 efi-32"' >> /etc/portage/make.conf
+emerge -av grub memtest86+
+
+cat << EOF > installcd-stage2-minimal.sed
+s#@REPO_DIR@#$(pwd)/releng#g
+s#@TIMESTAMP@#latest#g
+EOF
+catalyst -f <(sed -f installcd-stage2-minimal.sed \
+    releng/releases/specs/amd64/installcd-stage2-minimal.spec)
 ```
 [1]: https://github.com/gentoo/catalyst/blob/master/examples/livecd-stage2_template.spec
