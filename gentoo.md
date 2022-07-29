@@ -819,3 +819,12 @@ catalyst -f <(sed -f installcd-stage2-minimal.sed \
     releng/releases/specs/amd64/installcd-stage2-minimal.spec)
 ```
 [1]: https://github.com/gentoo/catalyst/blob/master/examples/livecd-stage2_template.spec
+
+### set usb0 for USB network card
+```sh
+cat << EOF >> /etc/udev/rules.d/net.rules
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="01:23:45:67:89:ab", NAME="usb0"
+EOF
+udevadm control --reload-rules && udevadm trigger
+```
+[1]: https://unix.stackexchange.com/questions/386162/how-to-set-up-an-usb-ethernet-interface-in-linux
