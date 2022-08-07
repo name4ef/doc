@@ -808,9 +808,9 @@ s#@TIMESTAMP@#latest#g
 EOF
 catalyst -f <(sed -f installcd-stage1.sed \
     releng/releases/specs/amd64/installcd-stage1.spec)
+
 echo 'GRUB_PLATFORMS="efi-64 efi-32"' >> /etc/portage/make.conf
 emerge -av grub memtest86+
-
 cat << EOF > installcd-stage2-minimal.sed
 s#@REPO_DIR@#$(pwd)/releng#g
 s#@TIMESTAMP@#latest#g
