@@ -52,3 +52,5 @@ patch -p1 < 005-name.patch
 # for revert changes:
 patch -p1 -R < 005-name.patch
 ```
+
+delete remote branch: `git push -d origen sambook`
