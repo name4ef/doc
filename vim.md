@@ -18,3 +18,8 @@ U   undo all changes in current line
 ```vim
 :g/^$/d
 ```
+
+### go to first non-ascii characters
+```vim
+/[^\x00-\x7F]
+```
