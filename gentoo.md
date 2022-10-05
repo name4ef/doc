@@ -43,6 +43,8 @@ GENTOO_MIRRORS="http://mirror.yandex.ru/gentoo-distfiles/" # mirrorselect -i -o 
 EOF
 mkdir etc/portage/repos.conf &&
 cp usr/share/portage/config/repos.conf etc/portage/repos.conf/gentoo.conf &&
+vim etc/portage/repos.conf/gentoo.conf
+    sync-uri = rsync://mirror.yandex.ru/gentoo-portage
 cp -L /etc/resolv.conf etc/ &&
 mount -t proc /proc proc/ && mount -R /sys sys/ && mount -R /dev dev/ &&
 chroot . /bin/bash
