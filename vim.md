@@ -23,3 +23,8 @@ U   undo all changes in current line
 ```vim
 /[^\x00-\x7F]
 ```
+
+### format of XML file
+```vim
+:'<,'>!xmllint --format -
+```
