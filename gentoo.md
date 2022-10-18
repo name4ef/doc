@@ -830,3 +830,14 @@ EOF
 udevadm control --reload-rules && udevadm trigger
 ```
 [1]: https://unix.stackexchange.com/questions/386162/how-to-set-up-an-usb-ethernet-interface-in-linux
+
+### crossdev
+#### creating environment for python-2.7
+*under work*
+note: crossdev repo already exists
+```sh
+unset LD_LIBRARY_PATH
+crossdev -t x86_64-python-linux-gnu
+```
+[1]: https://wiki.gentoo.org/wiki/Crossdev
+[2]: https://wiki.gentoo.org/wiki/Cross_build_environment
