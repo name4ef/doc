@@ -837,7 +837,11 @@ udevadm control --reload-rules && udevadm trigger
 note: crossdev repo already exists
 ```sh
 unset LD_LIBRARY_PATH
+cd /var/db/repos/crossdev/cross-x86_64-python-linux-gnu
+rm gcc; ln -s /var/db/repos/gentoo/sys-devel/gcc gcc # was not gentoo repo
 crossdev -t x86_64-python-linux-gnu
+
+crossdev -C x86_64-python-linux-gnu # for remove
 ```
 [1]: https://wiki.gentoo.org/wiki/Crossdev
 [2]: https://wiki.gentoo.org/wiki/Cross_build_environment
