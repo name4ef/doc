@@ -1,3 +1,5 @@
+delete remote branch: `git push -d origen sambook`
+
 ### adding tags
 ```sh
 git tag -a v1.0.2 -m "version 1.0.2"
@@ -18,13 +20,13 @@ git push origin hotfix --force
 
 ### work with submodules
 ```sh
-# Creating
+ # Creating
 git submodule add git@somehost:somelib lib/somelib
 git submodule init
 git submodule set-branch --branch gentoo lib/somelib # if it need
 git add .gitmodules lib/somelib; git commit; git push
 
-# Cloning
+ # Cloning
 git clone git@somehost:someproject; cd someproject
 git submodule init; git submodule update
 ```
@@ -34,7 +36,7 @@ git submodule init; git submodule update
 ```sh
 git checkout 03f482d6
 git commit --amend --author "New Author Name <New Author Email>"
-# now we have a new commit with hash assumed to be 42627abe
+ # now we have a new commit with hash assumed to be 42627abe
 git checkout master # checkout the original branch
 git replace 03f482d6 42627abe
 git filter-branch -- --all # rewrite all future commits based on the replacement
@@ -46,11 +48,16 @@ git push --force-with-lease
 ```sh
 git diff path/to/one/or/more/files > 005-name.patch
 
-# for apply patch:
+ # for apply patch:
 patch -p1 < 005-name.patch
 
-# for revert changes:
+ # for revert changes:
 patch -p1 -R < 005-name.patch
 ```
 
-delete remote branch: `git push -d origen sambook`
+### rename branch
+```sh
+git branch -m new_name
+git push origin -u new_name
+git push origin -d old_name
+```
