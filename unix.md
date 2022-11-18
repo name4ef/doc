@@ -1,5 +1,6 @@
  - update groups: `newgrp vboxuser`
  - change login shell: `chsh` (for termux: in termux-tools)
+ - convert to utf8: `enca -L ru -x utf8 somefile.txt`
 
 ### only console users are allowed to run the X server (fix it)
 ```sh
