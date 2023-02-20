@@ -304,6 +304,15 @@ emerge --update --newuse --deep --with-bdeps=y @world
 ```sh
 equery list -po vim
 ```
+#### multiple package instances within a single package slot...
+```sh
+ # It was solution for upgrade of setuptools
+emerge -1av \=dev-python/setuptools-65.7.0 \
+    dev-python/pydantic dev-python/certifi dev-python/setuptools_scm \
+    \=dev-python/autocommand-2.2.2 dev-python/inflect \
+    dev-python/jaraco-text
+```
+[1]: https://wiki.gentoo.org/wiki/Troubleshooting#Portage_issues
 
 ### qemu
 ```sh
